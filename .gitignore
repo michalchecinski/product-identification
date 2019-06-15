@@ -1,0 +1,50 @@
+# Build results
+*/[Oo]bj/
+*/[Bb]in/
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+[Bb]in/
+[Oo]bj/
+x64/
+x86/
+build/
+bld/
+msbuild.log
+msbuild.err
+msbuild.wrn
+*.sln.ide
+
+.vs/
+
+*.swp
+*.*~
+project.lock.json
+.DS_Store
+*.pyc
+
+# Visual Studio Code
+.vscode
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+#ReSharper
+*.resharper
+*\_ReSharper*
+*_ReSharper*
+
+#config file
+App.config
+appsettings.json
+appsettings.*.json
+appsettings.Development.json
+appsettings.Release.json
+
+#Publish profiles
+PublishProfiles
