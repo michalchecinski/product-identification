@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductIdentification.Web",
 EndProject
 Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "ProductIdentification.AzureRG", "src\ProductIdentification.AzureRG\ProductIdentification.AzureRG.deployproj", "{5438DE2E-864B-4AD0-9E2A-0F7137904B96}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductIdentification.Data", "src\ProductIdentification.Data\ProductIdentification.Data.csproj", "{7BE399DC-4085-4193-A3C6-51AAA28B0DC9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductIdentification.Core", "src\ProductIdentification.Core\ProductIdentification.Core.csproj", "{D8F8AA4E-3FF5-4CE1-B2FB-813A3ACD06DF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{5438DE2E-864B-4AD0-9E2A-0F7137904B96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5438DE2E-864B-4AD0-9E2A-0F7137904B96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5438DE2E-864B-4AD0-9E2A-0F7137904B96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BE399DC-4085-4193-A3C6-51AAA28B0DC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BE399DC-4085-4193-A3C6-51AAA28B0DC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BE399DC-4085-4193-A3C6-51AAA28B0DC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BE399DC-4085-4193-A3C6-51AAA28B0DC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8F8AA4E-3FF5-4CE1-B2FB-813A3ACD06DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8F8AA4E-3FF5-4CE1-B2FB-813A3ACD06DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8F8AA4E-3FF5-4CE1-B2FB-813A3ACD06DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8F8AA4E-3FF5-4CE1-B2FB-813A3ACD06DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
