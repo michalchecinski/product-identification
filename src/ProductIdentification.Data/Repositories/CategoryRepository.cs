@@ -1,11 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ProductIdentification.Core.Models;
+using ProductIdentification.Core.Repositories;
 
-namespace ProductIdentification.Data.RepositoriesImplementations
+namespace ProductIdentification.Data.Repositories
 {
-    using ProductIdentification.Data.Repositories;
-
     public class CategoryRepository : ICategoryRepository
     {
         private readonly ProductIdentificationContext _context;
@@ -31,6 +31,11 @@ namespace ProductIdentification.Data.RepositoriesImplementations
             var update = _context.Categories.Update(category);
             await _context.SaveChangesAsync();
             return update.Entity;
+        }
+
+        public async Task<List<Category>> GetAll()
+        {
+            return await _context.Categories.ToListAsync();
         }
     }
 }

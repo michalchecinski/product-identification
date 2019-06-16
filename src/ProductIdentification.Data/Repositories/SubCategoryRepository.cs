@@ -1,10 +1,12 @@
-﻿namespace ProductIdentification.Data.RepositoriesImplementations
-{
-    using System.Threading.Tasks;
-    using Microsoft.EntityFrameworkCore;
-    using ProductIdentification.Core.Models;
-    using ProductIdentification.Data.Repositories;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using ProductIdentification.Core.Models;
+using ProductIdentification.Core.Repositories;
 
+namespace ProductIdentification.Data.Repositories
+{
     public class SubCategoryRepository : ISubCategoryRepository
     {
         private readonly ProductIdentificationContext _context;
@@ -30,6 +32,16 @@
             var update = _context.SubCategories.Update(subCategory);
             await _context.SaveChangesAsync();
             return update.Entity;
+        }
+
+        public async Task<List<SubCategory>> GetAll()
+        {
+            return await _context.SubCategories.ToListAsync();
+        }
+
+        public async Task<List<SubCategory>> GetAll(int categoryId)
+        {
+            return await _context.SubCategories.Where(x => x.CategoryId == categoryId).ToListAsync();
         }
     }
 }
