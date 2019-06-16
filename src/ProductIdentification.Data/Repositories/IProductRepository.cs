@@ -1,11 +1,13 @@
-﻿namespace ProductIdentification.Data.Repositories
+﻿using System.Threading.Tasks;
+
+namespace ProductIdentification.Data.Repositories
 {
     using ProductIdentification.Core.Models;
 
     public interface IProductRepository
     {
-        Product GetProductById(int id);
-        void AddProduct(Product product);
-        Product UpdateProduct(Product product);
+        Task<Product> GetProductByIdAsync(int id);
+        Task AddProductAsync(Product product);
+        Task<Product> UpdateProductAsync(Product product);
     }
 }

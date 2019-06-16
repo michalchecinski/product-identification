@@ -1,11 +1,12 @@
 ﻿namespace ProductIdentification.Data.Repositories
 {
     using ProductIdentification.Core.Models;
+    using System.Threading.Tasks;
 
     public interface ISubCategoryRepository
     {
-        SubCategory GetProductById(int id);
-        void AddProduct(SubCategory subCategory);
-        SubCategory UpdateProduct(SubCategory subCategory);
+        Task<SubCategory> GetSubCategoryByIdAsync(int id);
+        Task AddSubCategoryAsync(SubCategory subCategory);
+        Task<SubCategory> UpdateSubCategoryAsync(SubCategory subCategory);
     }
 }
