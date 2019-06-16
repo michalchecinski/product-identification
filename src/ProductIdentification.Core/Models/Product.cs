@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ProductIdentification.Core.Models
+﻿namespace ProductIdentification.Core.Models
 {
     public class Product : BaseEntity
     {
