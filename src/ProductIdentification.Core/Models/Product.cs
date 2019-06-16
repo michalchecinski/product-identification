@@ -8,6 +8,6 @@
         public int SubCategoryId { get; set; }
         public SubCategory SubCategory { get; set; }
         public int CategoryId { get; set; }
-        public SubCategory Category { get; set; }
+        public Category Category { get; set; }
     }
 }
