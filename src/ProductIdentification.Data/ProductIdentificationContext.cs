@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using ProductIdentification.Core.Models;
-
-namespace ProductIdentification.Data
+﻿namespace ProductIdentification.Data
 {
+    using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore;
+    using Core.Models;
+
     public class ProductIdentificationContext : IdentityDbContext
     {
         public ProductIdentificationContext(DbContextOptions<ProductIdentificationContext> options)

@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ProductIdentification.Core.Models
+﻿namespace ProductIdentification.Core.Models
 {
+    using System.Collections.Generic;
+
     public class SubCategory : BaseEntity
     {
         public string Name { get; set; }
