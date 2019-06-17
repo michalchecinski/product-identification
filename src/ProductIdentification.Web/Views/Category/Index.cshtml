@@ -1,0 +1,41 @@
+﻿@model IEnumerable<ProductIdentification.Web.Models.CategoryViewModel>
+
+@{
+    ViewData["Title"] = "List of categories";
+}
+
+    <h1>List of categories</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-success">Create New CategoryName</a>
+</p>
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.ActionLink("Products", "ListFromCategory", "Product", new { id = item.Id }, new { @class = "btn btn-info" })
+            </td>            
+            <td>
+                @Html.ActionLink("SubCategories", "ListFromCategory", "SubCategory", new { id = item.Id }, new { @class = "btn btn-info" })
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-warning" })
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

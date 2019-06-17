@@ -10,6 +10,7 @@ namespace ProductIdentification.Infrastructure
     {
         private readonly ISubCategoryRepository _subCategoryRepository;
         private readonly ICategoryRepository _categoryRepository;
+
         public SubCategoryService(ISubCategoryRepository subCategoryRepository, ICategoryRepository categoryRepository)
         {
             _subCategoryRepository = subCategoryRepository;
@@ -47,6 +48,27 @@ namespace ProductIdentification.Infrastructure
             await _subCategoryRepository.AddSubCategoryAsync(subCategory);
         }
 
+        public async Task<SubCategory> AddSubcategory(string subCategoryName, string categoryName)
+        {
+            var category = await _categoryRepository.GetCategoryByNameAsync(categoryName);
+
+            if (category == null)
+            {
+                throw new Exception($"Category with name: {categoryName} does not exist.");
+            }
+
+            var subCategory = new SubCategory
+            {
+                Name = subCategoryName,
+                Category = category,
+                CategoryId = category.Id
+            };
+
+            await _subCategoryRepository.AddSubCategoryAsync(subCategory);
+
+            return subCategory;
+        }
+
         public async Task<SubCategory> UpdateSubcategory(SubCategory subCategory)
         {
             var categoryId = subCategory.CategoryId;
@@ -60,6 +82,41 @@ namespace ProductIdentification.Infrastructure
             subCategory.Category = category;
 
             return await _subCategoryRepository.UpdateSubCategoryAsync(subCategory);
+        }
+
+        public async Task<SubCategory> UpdateSubcategory(string subCategoryName, string categoryName)
+        {
+            var category = await _categoryRepository.GetCategoryByNameAsync(categoryName);
+
+            if (category == null)
+            {
+                throw new Exception($"Category with name: {categoryName} does not exist.");
+            }
+
+            var subCategory = new SubCategory
+            {
+                Name = subCategoryName,
+                Category = category,
+                CategoryId = category.Id
+            };
+
+            return await _subCategoryRepository.UpdateSubCategoryAsync(subCategory);
+        }
+
+        public async Task<IEnumerable<SubCategory>> GetSubcategories()
+        {
+            return await _subCategoryRepository.GetAll();
+        }
+
+        public async Task<string> GetSubcategoryNameById(int id)
+        {
+            var subCat = await _subCategoryRepository.GetName(id);
+            if (subCat == null)
+            {
+                throw new Exception($"SubCategory with id: {id} does not exist.");
+            }
+
+            return subCat;
         }
     }
 }
