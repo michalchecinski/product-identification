@@ -18,7 +18,9 @@ namespace ProductIdentification.Data.Repositories
 
         public async Task<SubCategory> GetSubCategoryByIdAsync(int id)
         {
-            return await _context.SubCategories.FirstOrDefaultAsync(x => x.Id == id);
+            return await _context.SubCategories
+                                 .Include(x => x.Category)
+                                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task AddSubCategoryAsync(SubCategory subCategory)
@@ -36,12 +38,25 @@ namespace ProductIdentification.Data.Repositories
 
         public async Task<List<SubCategory>> GetAll()
         {
-            return await _context.SubCategories.ToListAsync();
+            return await _context.SubCategories
+                                 .Include(x => x.Category)
+                                 .ToListAsync();
         }
 
         public async Task<List<SubCategory>> GetAll(int categoryId)
         {
-            return await _context.SubCategories.Where(x => x.CategoryId == categoryId).ToListAsync();
+            return await _context.SubCategories
+                                 .Where(x => x.CategoryId == categoryId)
+                                 .Include(x => x.Category)
+                                 .ToListAsync();
+        }
+
+        public async Task<string> GetName(int id)
+        {
+            return await _context.SubCategories
+                                 .Where(x => x.Id == id)
+                                 .Select(x => x.Name)
+                                 .FirstOrDefaultAsync();
         }
     }
 }

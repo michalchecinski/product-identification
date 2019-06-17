@@ -1,0 +1,77 @@
+﻿@using System.Reflection
+@model IEnumerable<ProductIdentification.Web.Models.ProductViewModel>
+
+@{
+    var createParameters = new Dictionary<string, string>();
+    var title = "List of products";
+    if (!string.IsNullOrWhiteSpace(ViewData["Category"]?.ToString()))
+    {
+        title += $" from {ViewData["Category"]}";
+        createParameters.Add("category", ViewData["Category"].ToString());
+    }
+    if (!string.IsNullOrWhiteSpace(ViewData["Subcategory"]?.ToString()))
+    {
+        title += $" : {ViewData["Subcategory"]}";
+        createParameters.Add("subcategory", ViewData["Subcategory"].ToString());
+    }
+    ViewData["Title"] = title;
+}
+
+<h1>@title</h1>
+
+<p>
+    <a asp-action="Create" asp-all-route-data="createParameters" class="btn btn-success">Create New Product</a>
+</p>
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NetPrice)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.GrossPrice)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CategoryName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SubCategoryName)
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NetPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GrossPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CategoryName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SubCategoryName)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new {/* id=item.PrimaryKey */})
+            </td>
+            <td>
+                @Html.ActionLink("Details", "Details", new {/* id=item.PrimaryKey */})
+            </td>
+            @*<td>
+                @Html.ActionLink("Delete", "Delete", new {/* id=item.PrimaryKey */})
+            </td>*@
+        </tr>
+    }
+    </tbody>
+</table>

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ProductIdentification.Core.Models;
@@ -36,6 +37,24 @@ namespace ProductIdentification.Data.Repositories
         public async Task<List<Category>> GetAll()
         {
             return await _context.Categories.ToListAsync();
+        }
+
+        public async Task<List<string>> GetAllNames()
+        {
+            return await _context.Categories.Select(x => x.Name).ToListAsync();
+        }
+
+        public async Task<Category> GetCategoryByNameAsync(string categoryName)
+        {
+            return await _context.Categories.FirstOrDefaultAsync(x => x.Name == categoryName);
+        }
+
+        public async Task<string> GetName(int id)
+        {
+            return await _context.Categories
+                                 .Where(x => x.Id == id)
+                                 .Select(x => x.Name)
+                                 .FirstOrDefaultAsync();
         }
     }
 }

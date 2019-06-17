@@ -10,5 +10,8 @@ namespace ProductIdentification.Core.Repositories
         Task AddCategoryAsync(Category category);
         Task<Category> UpdateCategoryAsync(Category category);
         Task<List<Category>> GetAll();
+        Task<List<string>> GetAllNames();
+        Task<Category> GetCategoryByNameAsync(string categoryName);
+        Task<string> GetName(int id);
     }
 }

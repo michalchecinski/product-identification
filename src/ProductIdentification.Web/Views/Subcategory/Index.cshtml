@@ -1,0 +1,58 @@
+﻿@model IEnumerable<ProductIdentification.Web.Models.SubCategoryViewModel>
+
+@{
+    var isCategory = ViewData["Category"] != null;
+    var title = "List of subcategories";
+
+    if (isCategory)
+    {
+        title += $" for category: {ViewData["Category"]}";
+    }
+
+    ViewData["Title"] = title;
+}
+
+<h1>@title</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-success">Create New Subcategory</a>
+</p>
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        @if (!isCategory)
+        {
+            <th>
+                @Html.DisplayNameFor(model => model.CategoryName)
+            </th>
+        }
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            @if (!isCategory)
+            {
+                <th>
+                    @Html.DisplayFor(modelItem => item.CategoryName)
+                </th>
+            }
+            <td>
+                @Html.ActionLink("Products", "ListFromSubCategory", "Product", new {id = item.Id}, new {@class = "btn btn-info"})
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new {id = item.Id}, new {@class = "btn btn-warning"})
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

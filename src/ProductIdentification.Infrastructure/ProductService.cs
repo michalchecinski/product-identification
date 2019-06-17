@@ -36,7 +36,9 @@ namespace ProductIdentification.Infrastructure
                 throw new Exception($"Sub Category with id: {subCategoryId} does not exist");
             }
 
-            return subcategory.Products.ToList();
+            var products = await _productRepository.GetAllBySubCategoryId(subCategoryId);
+
+            return products;
         }
 
         public async Task<List<Product>> GetAllByCategory(int categoryId)
@@ -47,10 +49,12 @@ namespace ProductIdentification.Infrastructure
                 throw new Exception($"Category with id: {categoryId} does not exist");
             }
 
-            return category.Products.ToList();
+            var products = await _productRepository.GetAllByCategoryId(categoryId);
+
+            return products;
         }
 
-        public async Task AddProduct(Product product)
+        public async Task<Product> AddProduct(Product product)
         {
             var categoryId = product.CategoryId;
             var category = await _categoryRepository.GetCategoryByIdAsync(categoryId);
@@ -76,6 +80,7 @@ namespace ProductIdentification.Infrastructure
             product.SubCategory = subcategory;
 
             await _productRepository.AddProductAsync(product);
+            return product;
         }
 
         public async Task<Product> UpdateProduct(Product product)
@@ -111,6 +116,39 @@ namespace ProductIdentification.Infrastructure
             product.SubCategory = subcategory;
 
             return await _productRepository.UpdateProductAsync(product);
+        }
+
+        public async Task<List<Product>> GetAll()
+        {
+            return await _productRepository.GetAll();
+        }
+
+        public async Task<Product> AddProduct(Product product, string categoryName, string subCategoryName)
+        {
+            var category = await _categoryRepository.GetCategoryByNameAsync(categoryName);
+            var subCategory = category.SubCategories.SingleOrDefault(x => x.Name == subCategoryName);
+
+            product.Category = category;
+            product.CategoryId = category.Id;
+
+            product.SubCategory = subCategory;
+            product.SubCategoryId = subCategory.Id;
+
+            return await AddProduct(product);
+        }
+
+        public async Task<Product> UpdateProduct(Product product, string categoryName, string subCategoryName)
+        {
+            var category = await _categoryRepository.GetCategoryByNameAsync(categoryName);
+            var subCategory = category.SubCategories.SingleOrDefault(x => x.Name == subCategoryName);
+
+            product.Category = category;
+            product.CategoryId = category.Id;
+
+            product.SubCategory = subCategory;
+            product.SubCategoryId = subCategory.Id;
+
+            return await UpdateProduct(product);
         }
     }
 }

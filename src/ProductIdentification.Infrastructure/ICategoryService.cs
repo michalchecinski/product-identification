@@ -10,5 +10,7 @@ namespace ProductIdentification.Infrastructure
         Task AddCategory(Category category);
         Task<Category> UpdateCategory(Category category);
         Task<List<Category>> GetAllCategories();
+        Task<List<string>> GetAllCategoriesNames();
+        Task<string> GetCategoryNameById(int id);
     }
 }

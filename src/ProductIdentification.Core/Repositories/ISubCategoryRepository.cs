@@ -11,5 +11,6 @@ namespace ProductIdentification.Core.Repositories
         Task<SubCategory> UpdateSubCategoryAsync(SubCategory subCategory);
         Task<List<SubCategory>> GetAll();
         Task<List<SubCategory>> GetAll(int categoryId);
+        Task<string> GetName(int id);
     }
 }
