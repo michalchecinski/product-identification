@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -99,7 +100,7 @@ namespace ProductIdentification.Web.Controllers
         // POST: Product/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(ProductCreateModel model)
+        public async Task<ActionResult> Create(ProductCreateModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -108,6 +109,23 @@ namespace ProductIdentification.Web.Controllers
 
             try
             {
+                var files = model.files;
+                long size = files.Sum(f => f.Length);
+
+                // full path to file in temp location
+                var filePath = Path.GetTempFileName();
+
+                foreach (var formFile in files)
+                {
+                    if (formFile.Length > 0)
+                    {
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await formFile.CopyToAsync(stream);
+                        }
+                    }
+                }
+
                 var product = _mapper.Map<Product>(model);
                 var result = _productService.AddProduct(product, model.CategoryName, model.SubCategoryName);
 

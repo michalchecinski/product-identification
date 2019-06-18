@@ -5,7 +5,7 @@
     "hostingPlanName": {
       "type": "string",
       "minLength": 1,
-      "defaultValue": "[concat('hostingPlan', resourceGroup().id)]"
+      "defaultValue": "[concat('hostingPlan', resourceGroup().name)]"
     },
     "skuName": {
       "type": "string",
@@ -35,7 +35,8 @@
       "type": "String"
     },
     "sqlAdministratorLoginPassword": {
-      "defaultValue": "[concat('P', uniqueString(resourceGroup().id, deployment().name, '224F5A8B-51DB-46A3-A7C8-59B0DD584A41'), 'x', '!')]",
+      "defaultValue":
+        "[concat('P', uniqueString(resourceGroup().id, deployment().name, '224F5A8B-51DB-46A3-A7C8-59B0DD584A41'), 'x', '!')]",
       "type": "SecureString"
     },
     "databaseName": {
@@ -74,11 +75,45 @@
       "metadata": {
         "description": "Describes the performance level for Edition"
       }
+    },
+    "nameTraining": {
+      "type": "string",
+      "defaultValue": "myCustomVisionService"
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "southcentralus",
+      "allowedValues": [
+        "southcentralus"
+      ]
+    },
+    "skuTraining": {
+      "type": "string",
+      "defaultValue": "F0",
+      "allowedValues": [
+        "F0",
+        "S0"
+      ],
+      "metadata": {
+        "description": "Describes the pricing tier for Training"
+      }
+    },
+    "skuPrediction": {
+      "type": "string",
+      "defaultValue": "F0",
+      "allowedValues": [
+        "F0",
+        "S0"
+      ],
+      "metadata": {
+        "description": "Describes the pricing tier for Prediction"
+      }
     }
   },
   "variables": {
     "webSiteName": "[concat('webSite-', resourceGroup().name)]",
-    "sqlserverName": "[concat('sqlserver-', resourceGroup().name)]"
+    "sqlserverName": "[concat('sqlserver-', resourceGroup().name)]",
+    "namePrediction": "[concat(take(replace(parameters('nameTraining'),'-',''), 18), '_Prediction')]"
   },
   "resources": [
     //{
@@ -199,119 +234,148 @@
     //        "ApplicationId": "[variables('webSiteName')]"
     //      }
     //    },
-        {
-          "type": "Microsoft.Web/serverfarms",
-          "sku": {
-            "name": "[parameters('skuName')]",
-            "capacity": "[parameters('skuCapacity')]"
+    {
+      "type": "Microsoft.Web/serverfarms",
+      "sku": {
+        "name": "[parameters('skuName')]",
+        "capacity": "[parameters('skuCapacity')]"
+      },
+      "kind": "app",
+      "name": "[parameters('hostingPlanName')]",
+      "apiVersion": "2016-09-01",
+      "location": "[resourceGroup().location]",
+      "scale": null,
+      "properties": {
+        "name": "[parameters('hostingPlanName')]",
+        "workerTierName": null,
+        "adminSiteName": null,
+        "hostingEnvironmentProfile": null,
+        "perSiteScaling": false,
+        "reserved": false,
+        "targetWorkerCount": 0,
+        "targetWorkerSizeId": 0
+      },
+      "dependsOn": []
+    },
+    {
+      "type": "Microsoft.Web/sites",
+      "kind": "app",
+      "name": "[variables('webSiteName')]",
+      "apiVersion": "2016-08-01",
+      "location": "[resourceGroup().location]",
+      "scale": null,
+      "properties": {
+        "enabled": true,
+        "hostNameSslStates": [
+          {
+            "name": "[concat(variables('webSiteName'),'.azurewebsites.net')]",
+            "sslState": "Disabled",
+            "virtualIP": null,
+            "thumbprint": null,
+            "toUpdate": null,
+            "hostType": "Standard"
           },
-          "kind": "app",
-          "name": "[parameters('hostingPlanName')]",
-          "apiVersion": "2016-09-01",
-          "location": "[resourceGroup().location]",
-          "scale": null,
-          "properties": {
-            "name": "[parameters('hostingPlanName')]",
-            "workerTierName": null,
-            "adminSiteName": null,
-            "hostingEnvironmentProfile": null,
-            "perSiteScaling": false,
-            "reserved": false,
-            "targetWorkerCount": 0,
-            "targetWorkerSizeId": 0
-          },
-          "dependsOn": []
+          {
+            "name": "[concat(variables('webSiteName'),'.scm.azurewebsites.net')]",
+            "sslState": "Disabled",
+            "virtualIP": null,
+            "thumbprint": null,
+            "toUpdate": null,
+            "hostType": "Repository"
+          }
+        ],
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
+        "reserved": false,
+        "siteConfig": null,
+        "scmSiteAlsoStopped": false,
+        "hostingEnvironmentProfile": null,
+        "clientAffinityEnabled": true,
+        "clientCertEnabled": false,
+        "hostNamesDisabled": false,
+        "containerSize": 0,
+        "dailyMemoryTimeQuota": 0,
+        "cloningInfo": null,
+        "httpsOnly": false,
+        "DBConnection": {
+          "value":
+            "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('sqlserverName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('databaseName'), ';User Id=', parameters('sqlAdministratorLogin'), '@', reference(concat('Microsoft.Sql/servers/', variables('sqlserverName'))).fullyQualifiedDomainName, ';Password=', parameters('sqlAdministratorLoginPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;ConnectRetryCount=10;')]",
+          "type": "SQLAzure"
         },
+        //"Storage": {
+        //  "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('videoStorageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('videoStorageAccountName')),'2018-07-01').keys[0].value)]",
+        //  "type": "Custom"
+        //},
+        "appSettings": [
+          "CustomVisionPrediction":
         {
-          "type": "Microsoft.Web/sites",
-          "kind": "app",
-          "name": "[variables('webSiteName')]",
-          "apiVersion": "2016-08-01",
-          "location": "[resourceGroup().location]",
-          "scale": null,
-          "properties": {
-            "enabled": true,
-            "hostNameSslStates": [
-              {
-                "name": "[concat(variables('webSiteName'),'.azurewebsites.net')]",
-                "sslState": "Disabled",
-                "virtualIP": null,
-                "thumbprint": null,
-                "toUpdate": null,
-                "hostType": "Standard"
-              },
-              {
-                "name": "[concat(variables('webSiteName'),'.scm.azurewebsites.net')]",
-                "sslState": "Disabled",
-                "virtualIP": null,
-                "thumbprint": null,
-                "toUpdate": null,
-                "hostType": "Repository"
-              }
-            ],
-            "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
-            "reserved": false,
-            "siteConfig": null,
-            "scmSiteAlsoStopped": false,
-            "hostingEnvironmentProfile": null,
-            "clientAffinityEnabled": true,
-            "clientCertEnabled": false,
-            "hostNamesDisabled": false,
-            "containerSize": 0,
-            "dailyMemoryTimeQuota": 0,
-            "cloningInfo": null,
-            "httpsOnly": false,
-            "DBConnection": {
-              "value": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('sqlserverName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('databaseName'), ';User Id=', parameters('sqlAdministratorLogin'), '@', reference(concat('Microsoft.Sql/servers/', variables('sqlserverName'))).fullyQualifiedDomainName, ';Password=', parameters('sqlAdministratorLoginPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;ConnectRetryCount=10;')]",
-              "type": "SQLAzure"
-            },
-            //"Storage": {
-            //  "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('videoStorageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('videoStorageAccountName')),'2018-07-01').keys[0].value)]",
-            //  "type": "Custom"
-            //},
-            "appSettings": [
-            ]
-          },
-          "dependsOn": [
-            "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
-            "[resourceId('Microsoft.Sql/servers/databases', variables('sqlserverName'), parameters('databaseName'))]" //,
-            //"[resourceId('Microsoft.Storage/storageAccounts', variables('videoStorageAccountName'))]"
-          ]
-        },
-        {
-          "type": "Microsoft.Sql/servers",
-          "kind": "v12.0",
-          "name": "[variables('sqlserverName')]",
-          "apiVersion": "2015-05-01-preview",
-          "location": "[resourceGroup().location]",
-          "scale": null,
-          "properties": {
-            "administratorLogin": "[parameters('sqlAdministratorLogin')]",
-            "administratorLoginPassword": "[parameters('sqlAdministratorLoginPassword')]",
-            "version": "12.0"
-          },
-          "dependsOn": []
-        },
-        {
-          "type": "Microsoft.Sql/servers/databases",
-          "sku": {
-            "name": "Basic",
-            "tier": "Basic"
-          },
-          "kind": "v12.0,user",
-          "name": "[concat(variables('sqlserverName'), '/', parameters('databaseName'))]",
-          "apiVersion": "2017-03-01-preview",
-          "location": "[resourceGroup().location]",
-          "scale": null,
-          "properties": {
-            "collation": "SQL_Latin1_General_CP1_CI_AS",
-            "maxSizeBytes": 104857600,
-            "catalogCollation": "SQL_Latin1_General_CP1_CI_AS",
-            "zoneRedundant": false
-          },
-          "dependsOn": [
-            "[resourceId('Microsoft.Sql/servers', variables('sqlserverName'))]"
-          ]
-        }
+        "value":
+          "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('sqlserverName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('databaseName'), ';User Id=', parameters('sqlAdministratorLogin'), '@', reference(concat('Microsoft.Sql/servers/', variables('sqlserverName'))).fullyQualifiedDomainName, ';Password=', parameters('sqlAdministratorLoginPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;ConnectRetryCount=10;')]",
+        "type": "SQLAzure"
+      }
+  ]
+},
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
+        "[resourceId('Microsoft.Sql/servers/databases', variables('sqlserverName'), parameters('databaseName'))]" //,
+        //"[resourceId('Microsoft.Storage/storageAccounts', variables('videoStorageAccountName'))]"
       ]
+    },
+    {
+      "type": "Microsoft.Sql/servers",
+      "kind": "v12.0",
+      "name": "[variables('sqlserverName')]",
+      "apiVersion": "2015-05-01-preview",
+      "location": "[resourceGroup().location]",
+      "scale": null,
+      "properties": {
+        "administratorLogin": "[parameters('sqlAdministratorLogin')]",
+        "administratorLoginPassword": "[parameters('sqlAdministratorLoginPassword')]",
+        "version": "12.0"
+      },
+      "dependsOn": []
+    },
+    {
+      "type": "Microsoft.Sql/servers/databases",
+      "sku": {
+        "name": "Basic",
+        "tier": "Basic"
+      },
+      "kind": "v12.0,user",
+      "name": "[concat(variables('sqlserverName'), '/', parameters('databaseName'))]",
+      "apiVersion": "2017-03-01-preview",
+      "location": "[resourceGroup().location]",
+      "scale": null,
+      "properties": {
+        "collation": "SQL_Latin1_General_CP1_CI_AS",
+        "maxSizeBytes": 104857600,
+        "catalogCollation": "SQL_Latin1_General_CP1_CI_AS",
+        "zoneRedundant": false
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Sql/servers', variables('sqlserverName'))]"
+      ]
+    },
+    {
+      "apiVersion": "2016-02-01-preview",
+      "name": "[parameters('nameTraining')]",
+      "type": "Microsoft.CognitiveServices/accounts",
+      "location": "[parameters('location')]",
+      "kind": "CustomVision.Training",
+      "sku": {
+        "name": "[parameters('skuTraining')]"
+      },
+      "properties": {}
+    },
+    {
+      "apiVersion": "2016-02-01-preview",
+      "name": "[variables('namePrediction')]",
+      "type": "Microsoft.CognitiveServices/accounts",
+      "location": "[parameters('location')]",
+      "kind": "CustomVision.Prediction",
+      "sku": {
+        "name": "[parameters('skuPrediction')]"
+      },
+      "properties": {}
     }
+  ]
+}

@@ -118,5 +118,16 @@ namespace ProductIdentification.Infrastructure
 
             return subCat;
         }
+
+        public async Task<List<string>> GetSubcategoriesByCategoryName(string category)
+        {
+            var categoryObject = await _categoryRepository.GetCategoryByNameAsync(category);
+            if (categoryObject == null)
+            {
+                throw new Exception($"Category with name: {category} does not exist.");
+            }
+            var categoryId = categoryObject.Id;
+            return await _subCategoryRepository.GetNamesByCategory(categoryId);
+        }
     }
 }

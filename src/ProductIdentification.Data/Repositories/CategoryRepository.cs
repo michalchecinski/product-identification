@@ -46,7 +46,10 @@ namespace ProductIdentification.Data.Repositories
 
         public async Task<Category> GetCategoryByNameAsync(string categoryName)
         {
-            return await _context.Categories.FirstOrDefaultAsync(x => x.Name == categoryName);
+            return await _context.Categories
+                                 .Where(x => x.Name == categoryName)
+                                 .Include(x => x.SubCategories)
+                                 .FirstOrDefaultAsync();
         }
 
         public async Task<string> GetName(int id)

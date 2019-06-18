@@ -12,5 +12,6 @@ namespace ProductIdentification.Core.Repositories
         Task<List<SubCategory>> GetAll();
         Task<List<SubCategory>> GetAll(int categoryId);
         Task<string> GetName(int id);
+        Task<List<string>> GetNamesByCategory(int categoryId);
     }
 }
