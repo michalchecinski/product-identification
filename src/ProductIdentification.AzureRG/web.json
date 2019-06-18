@@ -77,8 +77,8 @@
     }
   },
   "variables": {
-    "webSiteName": "[concat('webSite-', resourceGroup().id)]",
-    "sqlserverName": "[concat('sqlserver-', resourceGroup().id)]"
+    "webSiteName": "[concat('webSite-', resourceGroup().name)]",
+    "sqlserverName": "[concat('sqlserver-', resourceGroup().name)]"
   },
   "resources": [
     {
