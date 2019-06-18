@@ -299,7 +299,7 @@
             "tier": "Basic"
           },
           "kind": "v12.0,user",
-          "name": "[concat(variables('sqlserverName'), '/', [parameters('databaseName')])]",
+          "name": "[concat(variables('sqlserverName'), '/', parameters('databaseName'))]",
           "apiVersion": "2017-03-01-preview",
           "location": "[resourceGroup().location]",
           "scale": null,
