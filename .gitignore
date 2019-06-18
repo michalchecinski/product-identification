@@ -41,7 +41,6 @@ project.lock.json
 
 #config file
 App.config
-appsettings.json
 appsettings.*.json
 appsettings.Development.json
 appsettings.Release.json
