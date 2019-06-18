@@ -14,5 +14,6 @@ namespace ProductIdentification.Infrastructure
         Task<SubCategory> UpdateSubcategory(string subCategoryName, string categoryName);
         Task<IEnumerable<SubCategory>> GetSubcategories();
         Task<string> GetSubcategoryNameById(int id);
+        Task<List<string>> GetSubcategoriesByCategoryName(string category);
     }
 }

@@ -58,5 +58,13 @@ namespace ProductIdentification.Data.Repositories
                                  .Select(x => x.Name)
                                  .FirstOrDefaultAsync();
         }
+
+        public async Task<List<string>> GetNamesByCategory(int categoryId)
+        {
+            return await _context.SubCategories
+                                 .Where(x => x.CategoryId == categoryId)
+                                 .Select(x => x.Name)
+                                 .ToListAsync();
+        }
     }
 }
