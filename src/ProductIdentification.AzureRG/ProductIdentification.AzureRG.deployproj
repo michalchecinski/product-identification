@@ -28,6 +28,7 @@
     </None>
     <Content Include="Deploy-AzureResourceGroup.ps1" />
     <Content Include="web.json" />
+    <None Include="Scripts\migration.ps1" />
   </ItemGroup>
   <Target Name="GetReferenceAssemblyPaths" />
 </Project>
