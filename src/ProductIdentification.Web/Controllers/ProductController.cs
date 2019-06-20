@@ -104,13 +104,12 @@ namespace ProductIdentification.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View();
+                return View(model);
             }
 
             try
             {
                 var files = model.files;
-                long size = files.Sum(f => f.Length);
 
                 // full path to file in temp location
                 var filePath = Path.GetTempFileName();
