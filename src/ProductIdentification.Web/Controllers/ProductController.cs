@@ -74,12 +74,14 @@ namespace ProductIdentification.Web.Controllers
             var model = new ProductCreateModel
             {
                 CategoryNames = await _categoryService.GetAllCategoriesNames(),
-                SubCategoryNames = await _subCategoryService.GetSubcategories()
+                SubCategoryNames = new List<string>()
             };
 
             if (!string.IsNullOrWhiteSpace(category))
             {
+                var subCats = await _subCategoryService.GetSubcategoriesByCategoryName(category);
                 model.CategoryName = category;
+                model.SubCategoryNames = subCats ?? new List<string>();
             }
 
             if (!string.IsNullOrWhiteSpace(subcategory))
@@ -104,6 +106,19 @@ namespace ProductIdentification.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
+                model.CategoryNames = await _categoryService.GetAllCategoriesNames();
+
+                var category = model.CategoryName;
+                if (!string.IsNullOrWhiteSpace(category))
+                {
+                    var subCats = await _subCategoryService.GetSubcategoriesByCategoryName(category);
+                    model.SubCategoryNames = subCats ?? new List<string>();
+                }
+                else
+                {
+                    model.SubCategoryNames = new List<string>();
+                }
+                
                 return View(model);
             }
 
