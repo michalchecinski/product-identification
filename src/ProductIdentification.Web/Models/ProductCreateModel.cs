@@ -17,10 +17,10 @@ namespace ProductIdentification.Web.Models
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (files.Count <= 2)
+            if (files.Count < 1)
             {
                 yield return new ValidationResult(
-                    "You should upload at least 5 product pictures", new[] {nameof(files)});
+                    "You should upload at least 1 product pictures", new[] {nameof(files)});
             }
 
             if (GrossPrice <= NetPrice)
