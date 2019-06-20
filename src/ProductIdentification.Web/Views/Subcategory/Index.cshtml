@@ -42,9 +42,9 @@
             </td>
             @if (!isCategory)
             {
-                <th>
+                <td>
                     @Html.DisplayFor(modelItem => item.CategoryName)
-                </th>
+                </td>
             }
             <td>
                 @Html.ActionLink("Products", "ListFromSubCategory", "Product", new {id = item.Id}, new {@class = "btn btn-info"})
