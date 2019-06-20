@@ -34,7 +34,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="SubCategoryName" class="control-label"></label>
-                @Html.DropDownListFor(x => x.SubCategoryName, new SelectList(Model.SubCategoryNames.Where(x => x.Category.Name == Model.CategoryName )?.Select(x => x.Name).ToList()), "Select subcategory")
+                @Html.DropDownListFor(x => x.SubCategoryName, new SelectList(Model.SubCategoryNames), "Select subcategory")
                 <span asp-validation-for="SubCategoryName" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -43,8 +43,11 @@
                 <span asp-validation-for="files" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <output id="list"></output>
             </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
         </form>
     </div>
 </div>
@@ -77,6 +80,42 @@
         });
     });
 
+    function handleFileSelect(evt) {
+        var files = evt.target.files;
+
+        // Loop through the FileList and render image files as thumbnails.
+        for (var i = 0, f; f = files[i]; i++) {
+
+            // Only process image files.
+            //if (!f.type.match('image.*')) {
+            //    continue;
+            //}
+
+            var reader = new FileReader();
+
+            // Closure to capture the file information.
+            reader.onload = (function(theFile) {
+                return function(e) {
+                    // Render thumbnail.
+                    var span = document.createElement('span');
+                    span.innerHTML = 
+                    [
+                        '<img style="height: 75px; border: 1px solid #000; margin: 5px" src="', 
+                        e.target.result,
+                        '" title="', escape(theFile.name), 
+                        '"/>'
+                    ].join('');
+          
+                    document.getElementById('list').insertBefore(span, null);
+                };
+            })(f);
+
+            // Read in the image file as a data URL.
+            reader.readAsDataURL(f);
+        }
+    }
+
+    document.getElementById('files').addEventListener('change', handleFileSelect, false);
    
 </script>
 
