@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,8 +7,7 @@ namespace ProductIdentification.Web.Models
 {
     public class ProductViewModel
     {
-        [HiddenInput(DisplayValue = false)]
-        public int Id { get; set; }
+        [HiddenInput(DisplayValue = false)] public int Id { get; set; }
 
         [DisplayName("Product Name")]
         [Required(ErrorMessage = "Required")]
