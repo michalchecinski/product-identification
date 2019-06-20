@@ -33,7 +33,7 @@
                 @Html.DropDownListFor(x => x.CategoryName, new SelectList(Model.CategoryNames), "Select category")
             </div>
             <div class="form-group">
-                @Html.DropDownListFor(x => x.SubCategoryName, new SelectList(Model.SubCategoryNames.Select(x => x.Name).ToList()), "Select subcategory")
+                @Html.DropDownListFor(x => x.SubCategoryName, new SelectList(Model.SubCategoryNames), "Select subcategory")
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
