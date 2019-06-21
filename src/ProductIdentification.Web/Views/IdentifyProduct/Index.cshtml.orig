@@ -2,7 +2,7 @@
     ViewData["Title"] = "Identify product";
 }
 
-<h1>Identify product</h1>
+<h1>Create new product</h1>
 
 <hr/>
 <div class="row">
@@ -12,16 +12,23 @@
             <div class="form-group">
                 <p>Upload product images:</p>
                 <input type="file" name="file" id="file">
+<<<<<<< HEAD
                 <span class="text-danger">@ViewData["FileError"]</span>
+=======
+>>>>>>> Implement product identification
             </div>
             <div class="form-group">
                 <output id="list"></output>
             </div>
             <div class="form-group">
-                <input type="submit" value="Identify" class="btn btn-primary"/>
+                <input type="submit" value="Create" class="btn btn-primary"/>
             </div>
         </form>
     </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
 </div>
 
 <script>

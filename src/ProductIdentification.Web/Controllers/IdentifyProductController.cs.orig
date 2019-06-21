@@ -31,12 +31,6 @@ namespace ProductIdentification.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> Index(IFormFile file)
         {
-            if (file == null)
-            {
-                ViewData["FileError"] = "Must provide a valid image";
-                return View();
-            }
-
             Product product;
             using (var stream = new MemoryStream())
             {
@@ -44,12 +38,15 @@ namespace ProductIdentification.Web.Controllers
                 product = await _productIdentifyService.IdentifyProduct(stream);
             }
 
+<<<<<<< HEAD
             if (product == null)
             {
                 ViewData["FileError"] = "Cannot find that product";
                 return View();
             }
 
+=======
+>>>>>>> Implement product identification
             return RedirectToAction("Details", "Product", new {id = product.Id});
         }
     }
