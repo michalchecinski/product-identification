@@ -48,7 +48,7 @@ namespace ProductIdentification.Web
 
             services.AddDbContext<ProductIdentificationContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                    @"Server=tcp:sqlserver-prodident-test.database.windows.net,1433;Initial Catalog=ProductIdentification;Persist Security Info=False;User ID=admin32rwefawd23;Password=^HO9m$6pQVN\R9\vs9*23;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"));
             services.AddDefaultIdentity<IdentityUser>()
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ProductIdentificationContext>();
