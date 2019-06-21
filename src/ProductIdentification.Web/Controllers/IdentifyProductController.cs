@@ -38,6 +38,12 @@ namespace ProductIdentification.Web.Controllers
                 product = await _productIdentifyService.IdentifyProduct(stream);
             }
 
+            if (product == null)
+            {
+                ViewData["FileError"] = "Cannot find that product";
+                return View();
+            }
+
             return RedirectToAction("Details", "Product", new {id = product.Id});
         }
     }
