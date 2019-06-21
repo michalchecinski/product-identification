@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using ProductIdentification.Core.Models;
 using ProductIdentification.Core.Repositories;
 
@@ -58,7 +59,7 @@ namespace ProductIdentification.Infrastructure
             return products;
         }
 
-        public async Task<Product> AddProduct(Product product, IEnumerable<Stream> images)
+        public async Task<Product> AddProduct(Product product, List<IFormFile> images)
         {
             var categoryId = product.CategoryId;
             var category = await _categoryRepository.GetCategoryByIdAsync(categoryId);
@@ -130,7 +131,7 @@ namespace ProductIdentification.Infrastructure
         }
 
         public async Task<Product> AddProduct(Product product, string categoryName, string subCategoryName,
-            IEnumerable<Stream> images)
+            List<IFormFile> images)
         {
             var category = await _categoryRepository.GetCategoryByNameAsync(categoryName);
             if (category == null)

@@ -128,26 +128,12 @@ namespace ProductIdentification.Web.Controllers
 
                 Product result;
 
-                using (var filesStreamCollection = new StreamCollection())
-                {
-                    foreach (var formFile in files)
-                    {
-                        if (formFile.Length > 0)
-                        {
-                            using (var stream = new MemoryStream())
-                            {
-                                await formFile.CopyToAsync(stream);
-                                filesStreamCollection.Add(stream);
-                            }
-                        }
-                    }
+                var product = _mapper.Map<Product>(model);
+                result = await _productService.AddProduct(product,
+                    model.CategoryName,
+                    model.SubCategoryName,
+                    files);
 
-                    var product = _mapper.Map<Product>(model);
-                    result = await _productService.AddProduct(product, 
-                        model.CategoryName, 
-                        model.SubCategoryName,
-                        filesStreamCollection);
-                }
 
                 return RedirectToAction(nameof(Details), new {id = result.Id});
             }
