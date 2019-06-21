@@ -31,6 +31,12 @@ namespace ProductIdentification.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> Index(IFormFile file)
         {
+            if (file == null)
+            {
+                ViewData["FileError"] = "Must provide a valid image";
+                return View();
+            }
+
             Product product;
             using (var stream = new MemoryStream())
             {
