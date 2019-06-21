@@ -60,8 +60,12 @@ namespace ProductIdentification.Web
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<ISubCategoryService, SubCategoryService>();
             services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<IProductIdentifyService, ProductIdentifyService>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            var appSettings = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettings);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ProductIdentification.Core.Models;
 
@@ -13,5 +14,6 @@ namespace ProductIdentification.Core.Repositories
         Task<List<Product>> GetAllBySubCategoryId(int categoryId);
         Task<List<Product>> GetAllByCategoryId(int subcategoryId);
         Task<Product> Get(int id);
+        Task<Product> Get(Guid customVisionTagId);
     }
 }

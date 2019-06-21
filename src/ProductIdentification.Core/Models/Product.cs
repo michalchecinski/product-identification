@@ -1,4 +1,7 @@
-﻿namespace ProductIdentification.Core.Models
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ProductIdentification.Core.Models
 {
     public class Product : BaseEntity
     {
@@ -9,5 +12,8 @@
         public SubCategory SubCategory { get; set; }
         public int CategoryId { get; set; }
         public Category Category { get; set; }
+        public Guid CustomVisionTagId { get; set; }
+        [NotMapped]
+        public string TagName => $"{Category.Name}_{SubCategory.Name}_{Name}".Replace(" ", "_");
     }
 }

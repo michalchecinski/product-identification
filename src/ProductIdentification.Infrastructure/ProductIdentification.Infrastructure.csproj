@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Azure.CognitiveServices.Vision.CustomVision.Prediction" Version="1.0.0" />
+    <PackageReference Include="Microsoft.Azure.CognitiveServices.Vision.CustomVision.Training" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ProductIdentification.Core\ProductIdentification.Core.csproj" />
     <ProjectReference Include="..\ProductIdentification.Data\ProductIdentification.Data.csproj" />
   </ItemGroup>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,14 +14,17 @@ namespace ProductIdentification.Infrastructure
         private readonly IProductRepository _productRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly ISubCategoryRepository _subCategoryRepository;
+        private readonly IProductIdentifyService _productIdentifyService;
 
         public ProductService(IProductRepository productRepository,
                               ICategoryRepository categoryRepository,
-                              ISubCategoryRepository subCategoryRepository)
+                              ISubCategoryRepository subCategoryRepository,
+                              IProductIdentifyService productIdentifyService)
         {
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
             _subCategoryRepository = subCategoryRepository;
+            _productIdentifyService = productIdentifyService;
         }
 
         public async Task<List<Product>> GetAllProducts()
@@ -54,7 +58,7 @@ namespace ProductIdentification.Infrastructure
             return products;
         }
 
-        public async Task<Product> AddProduct(Product product)
+        public async Task<Product> AddProduct(Product product, IEnumerable<Stream> images)
         {
             var categoryId = product.CategoryId;
             var category = await _categoryRepository.GetCategoryByIdAsync(categoryId);
@@ -78,6 +82,8 @@ namespace ProductIdentification.Infrastructure
 
             product.Category = category;
             product.SubCategory = subcategory;
+
+            await _productIdentifyService.AddProduct(images, product);
 
             await _productRepository.AddProductAsync(product);
             return product;
@@ -123,10 +129,26 @@ namespace ProductIdentification.Infrastructure
             return await _productRepository.GetAll();
         }
 
-        public async Task<Product> AddProduct(Product product, string categoryName, string subCategoryName)
+        public async Task<Product> AddProduct(Product product, string categoryName, string subCategoryName,
+            IEnumerable<Stream> images)
         {
             var category = await _categoryRepository.GetCategoryByNameAsync(categoryName);
+            if (category == null)
+            {
+                throw new Exception($"Category with name: {categoryName} does not exist");
+            }
+
             var subCategory = category.SubCategories.SingleOrDefault(x => x.Name == subCategoryName);
+            if (subCategory == null)
+            {
+                throw new Exception($"Subcategory with name: {subCategoryName} does not exist");
+            }
+
+            if (subCategory.CategoryId != category.Id)
+            {
+                throw new Exception(
+                    $"Sub Category with name: {subCategoryName} is not child of category with name: {categoryName}");
+            }
 
             product.Category = category;
             product.CategoryId = category.Id;
@@ -134,7 +156,10 @@ namespace ProductIdentification.Infrastructure
             product.SubCategory = subCategory;
             product.SubCategoryId = subCategory.Id;
 
-            return await AddProduct(product);
+            await _productIdentifyService.AddProduct(images, product);
+
+            await _productRepository.AddProductAsync(product);
+            return product;
         }
 
         public async Task<Product> UpdateProduct(Product product, string categoryName, string subCategoryName)
