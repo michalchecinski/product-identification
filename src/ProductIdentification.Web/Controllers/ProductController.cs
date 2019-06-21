@@ -23,10 +23,10 @@ namespace ProductIdentification.Web.Controllers
         private readonly IProductRepository _productRepository;
 
         public ProductController(IProductService productService,
-                                 IMapper mapper,
-                                 ISubCategoryService subCategoryService,
-                                 ICategoryService categoryService,
-                                 IProductRepository productRepository)
+            IMapper mapper,
+            ISubCategoryService subCategoryService,
+            ICategoryService categoryService,
+            IProductRepository productRepository)
         {
             _productService = productService;
             _mapper = mapper;
@@ -118,7 +118,7 @@ namespace ProductIdentification.Web.Controllers
                 {
                     model.SubCategoryNames = new List<string>();
                 }
-                
+
                 return View(model);
             }
 
@@ -126,24 +126,30 @@ namespace ProductIdentification.Web.Controllers
             {
                 var files = model.files;
 
-                // full path to file in temp location
-                var filePath = Path.GetTempFileName();
+                Product result;
 
-                foreach (var formFile in files)
+                using (var filesStreamCollection = new StreamCollection())
                 {
-                    if (formFile.Length > 0)
+                    foreach (var formFile in files)
                     {
-                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        if (formFile.Length > 0)
                         {
-                            await formFile.CopyToAsync(stream);
+                            using (var stream = new MemoryStream())
+                            {
+                                await formFile.CopyToAsync(stream);
+                                filesStreamCollection.Add(stream);
+                            }
                         }
                     }
+
+                    var product = _mapper.Map<Product>(model);
+                    result = await _productService.AddProduct(product, 
+                        model.CategoryName, 
+                        model.SubCategoryName,
+                        filesStreamCollection);
                 }
 
-                var product = _mapper.Map<Product>(model);
-                var result = _productService.AddProduct(product, model.CategoryName, model.SubCategoryName);
-
-                return RedirectToAction(nameof(Details), new { id = result.Id});
+                return RedirectToAction(nameof(Details), new {id = result.Id});
             }
             catch
             {
@@ -180,7 +186,7 @@ namespace ProductIdentification.Web.Controllers
                 var product = _mapper.Map<Product>(model);
                 var result = _productService.UpdateProduct(product, model.CategoryName, model.SubCategoryName);
 
-                return RedirectToAction(nameof(Details), new { id = result.Id });
+                return RedirectToAction(nameof(Details), new {id = result.Id});
             }
             catch
             {
