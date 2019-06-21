@@ -8,8 +8,9 @@ namespace ProductIdentification.Infrastructure
 {
     public class AppSettings
     {
-        public string CustomVisionPredictionKey { get; set; }
         public string CustomVisionTrainingKey { get; set; }
+        public string CustomVisionPredictionKey { get; set; }
         public string CustomVisionProjectId { get; set; }
+        public string CustomVisionPredictionId { get; set; }
     }
 }

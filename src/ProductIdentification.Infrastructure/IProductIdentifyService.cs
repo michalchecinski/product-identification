@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using ProductIdentification.Core.Models;
 
 namespace ProductIdentification.Infrastructure
@@ -9,6 +10,6 @@ namespace ProductIdentification.Infrastructure
     {
         Task<Product> IdentifyProduct(Stream image);
 
-        Task<Product> AddProduct(IEnumerable<Stream> images, Product product);
+        Task<Product> AddProduct(List<IFormFile> images, Product product);
     }
 }
