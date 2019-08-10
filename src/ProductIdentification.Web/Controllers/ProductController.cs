@@ -148,6 +148,8 @@ namespace ProductIdentification.Web.Controllers
         {
             var product = await _productRepository.Get(id);
             var model = _mapper.Map<ProductCreateModel>(product);
+            model.CategoryNames = await _categoryService.GetAllCategoriesNames();
+            model.SubCategoryNames = await _subCategoryService.GetSubcategoriesByCategoryName(model.CategoryName);
 
             return View(model);
         }
