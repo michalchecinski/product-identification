@@ -308,6 +308,10 @@
           {
             "name": "AppSettings.CustomVisionTrainingKey",
             "value": "[listKeys(parameters('nameTraining'),'2016-02-01-preview').key1]"
+          },
+          {
+            "name": "AppSettings.CustomVisionEndpoint",
+            "value": "[reference(variables('namePrediction'),'2016-02-01-preview').endpoint]"
           }
         ]
 },
