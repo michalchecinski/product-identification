@@ -22,16 +22,18 @@ namespace ProductIdentification.Infrastructure
         private readonly string _projectId;
         private readonly string _trainingKey;
         private readonly string _predictionId;
-        private const string EndpointUrl = "https://westeurope.api.cognitive.microsoft.com";
+        private readonly string _endpointUrl;
         private const string PublishedModelName = "ProductIdentification";
 
         public ProductIdentifyService(IProductRepository productRepository, IOptions<AppSettings> settings)
         {
             _productRepository = productRepository;
-            _predictionKey = settings.Value.CustomVisionPredictionKey;
-            _trainingKey = settings.Value.CustomVisionTrainingKey;
-            _projectId = settings.Value.CustomVisionProjectId;
-            _predictionId = settings.Value.CustomVisionPredictionId;
+            var settingsValue = settings.Value;
+            _predictionKey = settingsValue.CustomVisionPredictionKey;
+            _trainingKey = settingsValue.CustomVisionTrainingKey;
+            _projectId = settingsValue.CustomVisionProjectId;
+            _predictionId = settingsValue.CustomVisionPredictionId;
+            _endpointUrl = settingsValue.CustomVisionEndpoint;
         }
 
         public async Task<Product> IdentifyProduct(Stream image)
@@ -39,7 +41,7 @@ namespace ProductIdentification.Infrastructure
             CustomVisionPredictionClient endpoint = new CustomVisionPredictionClient()
             {
                 ApiKey = _predictionKey,
-                Endpoint = EndpointUrl
+                Endpoint = _endpointUrl
             };
 
             image.Seek(0, SeekOrigin.Begin);
@@ -60,7 +62,7 @@ namespace ProductIdentification.Infrastructure
             CustomVisionTrainingClient trainingApi = new CustomVisionTrainingClient()
             {
                 ApiKey = _trainingKey,
-                Endpoint = EndpointUrl
+                Endpoint = _endpointUrl
             };
 
             var project = await trainingApi.GetProjectAsync(new Guid(_projectId));
