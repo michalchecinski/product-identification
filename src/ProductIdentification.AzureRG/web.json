@@ -78,14 +78,7 @@
     },
     "nameTraining": {
       "type": "string",
-      "defaultValue": "myCustomVisionService"
-    },
-    "location": {
-      "type": "string",
-      "defaultValue": "southcentralus",
-      "allowedValues": [
-        "southcentralus"
-      ]
+      "defaultValue": "ProdIdentCustomVision"
     },
     "skuTraining": {
       "type": "string",
@@ -93,10 +86,7 @@
       "allowedValues": [
         "F0",
         "S0"
-      ],
-      "metadata": {
-        "description": "Describes the pricing tier for Training"
-      }
+      ]
     },
     "skuPrediction": {
       "type": "string",
@@ -104,16 +94,14 @@
       "allowedValues": [
         "F0",
         "S0"
-      ],
-      "metadata": {
-        "description": "Describes the pricing tier for Prediction"
-      }
+      ]
     }
   },
   "variables": {
     "webSiteName": "[concat('webSite-', resourceGroup().name)]",
     "sqlserverName": "[concat('sqlserver-', resourceGroup().name)]",
-    "namePrediction": "[concat(take(replace(parameters('nameTraining'),'-',''), 18), '_Prediction')]"
+    "namePrediction": "[concat(take(replace(parameters('nameTraining'),'-',''), 18), '_Prediction')]",
+    "nameTraining": "[concat(take(replace(parameters('nameTraining'),'-',''), 18), '_Training')]"
   },
   "resources": [
     //{
@@ -301,22 +289,34 @@
           "type": "SQLAzure"
         },
         //"Storage": {
-        //  "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('videoStorageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('videoStorageAccountName')),'2018-07-01').keys[0].value)]",
+        //  "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('videoStorageAccountName')),'2018-07-01').keys[0].value)]",
         //  "type": "Custom"
         //},
         "appSettings": [
-          "CustomVisionPrediction":
-        {
-        "value":
-          "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('sqlserverName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('databaseName'), ';User Id=', parameters('sqlAdministratorLogin'), '@', reference(concat('Microsoft.Sql/servers/', variables('sqlserverName'))).fullyQualifiedDomainName, ';Password=', parameters('sqlAdministratorLoginPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;ConnectRetryCount=10;')]",
-        "type": "SQLAzure"
-      }
-  ]
+          {
+            "name": "AppSettings.CustomVisionPredictionKey",
+            "value": "[listKeys(variables('namePrediction'),'2016-02-01-preview').key1]"
+          },
+          {
+            "name": "AppSettings.CustomVisionPredictionId",
+            "value": ""
+          },
+          {
+            "name": "AppSettings.CustomVisionProjectId",
+            "value": ""
+          },
+          {
+            "name": "AppSettings.CustomVisionTrainingKey",
+            "value": "[listKeys(parameters('nameTraining'),'2016-02-01-preview').key1]"
+          }
+        ]
 },
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
-        "[resourceId('Microsoft.Sql/servers/databases', variables('sqlserverName'), parameters('databaseName'))]" //,
-        //"[resourceId('Microsoft.Storage/storageAccounts', variables('videoStorageAccountName'))]"
+        "[resourceId('Microsoft.Sql/servers/databases', variables('sqlserverName'), parameters('databaseName'))]",
+        "[resourceId('Microsoft.CognitiveServices/accounts', variables('namePrediction'), parameters('databaseName'))]",
+        "[resourceId('Microsoft.CognitiveServices/accounts', parameters('nameTraining'), parameters('databaseName'))]" //,
+        //"[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
       ]
     },
     {
@@ -358,7 +358,7 @@
       "apiVersion": "2016-02-01-preview",
       "name": "[parameters('nameTraining')]",
       "type": "Microsoft.CognitiveServices/accounts",
-      "location": "[parameters('location')]",
+      "location": "[resourceGroup().location]",
       "kind": "CustomVision.Training",
       "sku": {
         "name": "[parameters('skuTraining')]"
@@ -369,7 +369,7 @@
       "apiVersion": "2016-02-01-preview",
       "name": "[variables('namePrediction')]",
       "type": "Microsoft.CognitiveServices/accounts",
-      "location": "[parameters('location')]",
+      "location": "[resourceGroup().location]",
       "kind": "CustomVision.Prediction",
       "sku": {
         "name": "[parameters('skuPrediction')]"
