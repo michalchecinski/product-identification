@@ -47,8 +47,7 @@ namespace ProductIdentification.Web
             });
 
             services.AddDbContext<ProductIdentificationContext>(options =>
-                options.UseSqlServer(
-                    @"Server=tcp:sqlserver-prodident-test.database.windows.net,1433;Initial Catalog=ProductIdentification;Persist Security Info=False;User ID=admin32rwefawd23;Password=^HO9m$6pQVN\R9\vs9*23;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"));
+                options.UseSqlServer(Configuration.GetConnectionString("DBConnection")));
             services.AddDefaultIdentity<IdentityUser>()
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ProductIdentificationContext>();
@@ -64,6 +63,7 @@ namespace ProductIdentification.Web
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+            services.AddOptions();
             var appSettings = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettings);
 
