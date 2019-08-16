@@ -318,8 +318,8 @@
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
         "[resourceId('Microsoft.Sql/servers/databases', variables('sqlserverName'), parameters('databaseName'))]",
-        "[resourceId('Microsoft.CognitiveServices/accounts', variables('namePrediction'), parameters('databaseName'))]",
-        "[resourceId('Microsoft.CognitiveServices/accounts', parameters('nameTraining'), parameters('databaseName'))]" //,
+        "[resourceId('Microsoft.CognitiveServices/accounts', variables('namePrediction'))]",
+        "[resourceId('Microsoft.CognitiveServices/accounts', parameters('nameTraining'))]" //,
         //"[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
       ]
     },
