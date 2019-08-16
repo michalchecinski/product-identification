@@ -47,7 +47,9 @@ namespace ProductIdentification.Web
             });
 
             services.AddDbContext<ProductIdentificationContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            options.UseSqlServer(Configuration.GetConnectionString("DBConnection")));
+
             services.AddDefaultIdentity<IdentityUser>()
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ProductIdentificationContext>();
@@ -63,6 +65,7 @@ namespace ProductIdentification.Web
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+            services.AddOptions();
             var appSettings = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettings);
 
