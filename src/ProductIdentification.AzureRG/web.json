@@ -105,25 +105,25 @@
   "resources": [
     //{
     //      "apiVersion": "2014-04-01",
-    //      "name": "[concat('ServerErrors ', variables('webSiteName'))]",
+    //      "name": "[concat('ServerErrors ', parameters('webSiteName'))]",
     //      "type": "Microsoft.Insights/alertrules",
     //      "location": "[resourceGroup().location]",
     //      "dependsOn": [
-    //        "[resourceId('Microsoft.Web/sites/', variables('webSiteName'))]"
+    //        "[resourceId('Microsoft.Web/sites/', parameters('webSiteName'))]"
     //      ],
     //      "tags": {
-    //        "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/sites/', variables('webSiteName'))]": "Resource",
+    //        "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/sites/', parameters('webSiteName'))]": "Resource",
     //        "displayName": "ServerErrorsAlertRule"
     //      },
     //      "properties": {
-    //        "name": "[concat('ServerErrors ', variables('webSiteName'))]",
-    //        "description": "[concat(variables('webSiteName'), ' has some server errors, status code 5xx.')]",
+    //        "name": "[concat('ServerErrors ', parameters('webSiteName'))]",
+    //        "description": "[concat(parameters('webSiteName'), ' has some server errors, status code 5xx.')]",
     //        "isEnabled": false,
     //        "condition": {
     //          "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
     //          "dataSource": {
     //            "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
-    //            "resourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/sites/', variables('webSiteName'))]",
+    //            "resourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/sites/', parameters('webSiteName'))]",
     //            "metricName": "Http5xx"
     //          },
     //          "operator": "GreaterThan",
@@ -139,25 +139,25 @@
     //    },
     //    {
     //      "apiVersion": "2014-04-01",
-    //      "name": "[concat('ForbiddenRequests ', variables('webSiteName'))]",
+    //      "name": "[concat('ForbiddenRequests ', parameters('webSiteName'))]",
     //      "type": "Microsoft.Insights/alertrules",
     //      "location": "[resourceGroup().location]",
     //      "dependsOn": [
-    //        "[resourceId('Microsoft.Web/sites/', variables('webSiteName'))]"
+    //        "[resourceId('Microsoft.Web/sites/', parameters('webSiteName'))]"
     //      ],
     //      "tags": {
-    //        "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/sites/', variables('webSiteName'))]": "Resource",
+    //        "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/sites/', parameters('webSiteName'))]": "Resource",
     //        "displayName": "ForbiddenRequestsAlertRule"
     //      },
     //      "properties": {
-    //        "name": "[concat('ForbiddenRequests ', variables('webSiteName'))]",
-    //        "description": "[concat(variables('webSiteName'), ' has some requests that are forbidden, status code 403.')]",
+    //        "name": "[concat('ForbiddenRequests ', parameters('webSiteName'))]",
+    //        "description": "[concat(parameters('webSiteName'), ' has some requests that are forbidden, status code 403.')]",
     //        "isEnabled": false,
     //        "condition": {
     //          "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
     //          "dataSource": {
     //            "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
-    //            "resourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/sites/', variables('webSiteName'))]",
+    //            "resourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/sites/', parameters('webSiteName'))]",
     //            "metricName": "Http403"
     //          },
     //          "operator": "GreaterThan",
@@ -207,18 +207,18 @@
     //    },
     //    {
     //      "apiVersion": "2014-04-01",
-    //      "name": "[concat('insights-', variables('webSiteName'))]",
+    //      "name": "[concat('insights-', parameters('webSiteName'))]",
     //      "type": "Microsoft.Insights/components",
     //      "location": "[resourceGroup().location]",
     //      "dependsOn": [
-    //        "[resourceId('Microsoft.Web/sites/', variables('webSiteName'))]"
+    //        "[resourceId('Microsoft.Web/sites/', parameters('webSiteName'))]"
     //      ],
     //      "tags": {
-    //        "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/sites/', variables('webSiteName'))]": "Resource",
+    //        "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/sites/', parameters('webSiteName'))]": "Resource",
     //        "displayName": "AppInsightsComponent"
     //      },
     //      "properties": {
-    //        "ApplicationId": "[variables('webSiteName')]"
+    //        "ApplicationId": "[parameters('webSiteName')]"
     //      }
     //    },
     {
@@ -284,11 +284,11 @@
         "cloningInfo": null,
         "httpsOnly": false,
         "DBConnection": {
-          "value": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', variables('sqlserverName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('databaseName'), ';User Id=', parameters('sqlAdministratorLogin'), '@', reference(concat('Microsoft.Sql/servers/', variables('sqlserverName'))).fullyQualifiedDomainName, ';Password=', parameters('sqlAdministratorLoginPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;ConnectRetryCount=10;')]",
+          "value": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('sqlserverName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('databaseName'), ';User Id=', parameters('sqlAdministratorLogin'), '@', reference(concat('Microsoft.Sql/servers/', parameters('sqlserverName'))).fullyQualifiedDomainName, ';Password=', parameters('sqlAdministratorLoginPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;ConnectRetryCount=10;')]",
           "type": "SQLAzure"
         },
         //"Storage": {
-        //  "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('videoStorageAccountName')),'2018-07-01').keys[0].value)]",
+        //  "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')),'2018-07-01').keys[0].value)]",
         //  "type": "Custom"
         //},
         "appSettings": [
@@ -316,10 +316,10 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
-        "[resourceId('Microsoft.Sql/servers/databases', variables('sqlserverName'), parameters('databaseName'))]",
-        "[resourceId('Microsoft.CognitiveServices/accounts', variables('namePrediction'))]",
+        "[resourceId('Microsoft.Sql/servers/databases', parameters('sqlserverName'), parameters('databaseName'))]",
+        "[resourceId('Microsoft.CognitiveServices/accounts', parameters('namePrediction'))]",
         "[resourceId('Microsoft.CognitiveServices/accounts', parameters('nameTraining'))]" //,
-        //"[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+        //"[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
       ]
     },
     {
@@ -354,7 +354,7 @@
         "zoneRedundant": false
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Sql/servers', variables('sqlserverName'))]"
+        "[resourceId('Microsoft.Sql/servers', parameters('sqlserverName'))]"
       ]
     },
     {
