@@ -2,6 +2,9 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "webSiteName": {
+      "type": "string"
+    },
     "hostingPlanName": {
       "type": "string",
       "minLength": 1,
@@ -30,13 +33,13 @@
       "defaultValue": 1,
       "minValue": 1
     },
+    "sqlserverName": { "type": "string" },
     "sqlAdministratorLogin": {
       "defaultValue": "[concat('l', uniqueString(resourceGroup().id, '9A08DDB9-95A1-495F-9263-D89738ED4205'))]",
-      "type": "String"
+      "type": "string"
     },
     "sqlAdministratorLoginPassword": {
-      "defaultValue":
-        "[concat('P', uniqueString(resourceGroup().id, deployment().name, '224F5A8B-51DB-46A3-A7C8-59B0DD584A41'), 'x', '!')]",
+      "defaultValue": "[concat('P', uniqueString(resourceGroup().id, deployment().name, '224F5A8B-51DB-46A3-A7C8-59B0DD584A41'), 'x', '!')]",
       "type": "SecureString"
     },
     "databaseName": {
@@ -77,8 +80,10 @@
       }
     },
     "nameTraining": {
-      "type": "string",
-      "defaultValue": "ProdIdentCustomVision"
+      "type": "string"
+    },
+    "namePrediction": {
+      "type": "string"
     },
     "skuTraining": {
       "type": "string",
@@ -90,18 +95,12 @@
     },
     "skuPrediction": {
       "type": "string",
-      "defaultValue": "F0",
+      "defaultValue": "S0",
       "allowedValues": [
         "F0",
         "S0"
       ]
     }
-  },
-  "variables": {
-    "webSiteName": "[concat('webSite-', resourceGroup().name)]",
-    "sqlserverName": "[concat('sqlserver-', resourceGroup().name)]",
-    "namePrediction": "[concat(take(replace(parameters('nameTraining'),'-',''), 18), '_Prediction')]",
-    "nameTraining": "[concat(take(replace(parameters('nameTraining'),'-',''), 18), '_Training')]"
   },
   "resources": [
     //{
@@ -248,7 +247,7 @@
     {
       "type": "Microsoft.Web/sites",
       "kind": "app",
-      "name": "[variables('webSiteName')]",
+      "name": "[parameters('webSiteName')]",
       "apiVersion": "2016-08-01",
       "location": "[resourceGroup().location]",
       "scale": null,
@@ -256,7 +255,7 @@
         "enabled": true,
         "hostNameSslStates": [
           {
-            "name": "[concat(variables('webSiteName'),'.azurewebsites.net')]",
+            "name": "[concat(parameters('webSiteName'),'.azurewebsites.net')]",
             "sslState": "Disabled",
             "virtualIP": null,
             "thumbprint": null,
@@ -264,7 +263,7 @@
             "hostType": "Standard"
           },
           {
-            "name": "[concat(variables('webSiteName'),'.scm.azurewebsites.net')]",
+            "name": "[concat(parameters('webSiteName'),'.scm.azurewebsites.net')]",
             "sslState": "Disabled",
             "virtualIP": null,
             "thumbprint": null,
@@ -294,27 +293,27 @@
         //},
         "appSettings": [
           {
-            "name": "AppSettings.CustomVisionPredictionKey",
-            "value": "[listKeys(variables('namePrediction'),'2016-02-01-preview').key1]"
+            "name": "AppSettings:CustomVisionPredictionKey",
+            "value": "[listKeys(parameters('namePrediction'),'2016-02-01-preview').key1]"
           },
           {
-            "name": "AppSettings.CustomVisionPredictionId",
+            "name": "AppSettings:CustomVisionPredictionId",
             "value": ""
           },
           {
-            "name": "AppSettings.CustomVisionProjectId",
+            "name": "AppSettings:CustomVisionProjectId",
             "value": ""
           },
           {
-            "name": "AppSettings.CustomVisionTrainingKey",
+            "name": "AppSettings:CustomVisionTrainingKey",
             "value": "[listKeys(parameters('nameTraining'),'2016-02-01-preview').key1]"
           },
           {
-            "name": "AppSettings.CustomVisionEndpoint",
-            "value": "[reference(variables('namePrediction'),'2016-02-01-preview').endpoint]"
+            "name": "AppSettings:CustomVisionEndpoint",
+            "value": "[reference(parameters('namePrediction'),'2016-02-01-preview').endpoint]"
           }
         ]
-},
+      },
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
         "[resourceId('Microsoft.Sql/servers/databases', variables('sqlserverName'), parameters('databaseName'))]",
@@ -326,7 +325,7 @@
     {
       "type": "Microsoft.Sql/servers",
       "kind": "v12.0",
-      "name": "[variables('sqlserverName')]",
+      "name": "[parameters('sqlserverName')]",
       "apiVersion": "2015-05-01-preview",
       "location": "[resourceGroup().location]",
       "scale": null,
@@ -344,7 +343,7 @@
         "tier": "Basic"
       },
       "kind": "v12.0,user",
-      "name": "[concat(variables('sqlserverName'), '/', parameters('databaseName'))]",
+      "name": "[concat(parameters('sqlserverName'), '/', parameters('databaseName'))]",
       "apiVersion": "2017-03-01-preview",
       "location": "[resourceGroup().location]",
       "scale": null,
@@ -371,7 +370,7 @@
     },
     {
       "apiVersion": "2016-02-01-preview",
-      "name": "[variables('namePrediction')]",
+      "name": "[parameters('namePrediction')]",
       "type": "Microsoft.CognitiveServices/accounts",
       "location": "[resourceGroup().location]",
       "kind": "CustomVision.Prediction",
