@@ -10,7 +10,7 @@
             }
         },
         "frontendStorageName": {
-            "defaultValue": "[concat(resourceGroup().name, 'frontst']",
+            "defaultValue": "[concat(resourceGroup().name, 'frontst')]",
             "type": "String"
         },
         "StaticStorageAccountType": {
