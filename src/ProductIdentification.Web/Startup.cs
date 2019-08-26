@@ -54,20 +54,22 @@ namespace ProductIdentification.Web
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ProductIdentificationContext>();
 
-            services.AddTransient<ICategoryRepository, CategoryRepository>();
-            services.AddTransient<ISubCategoryRepository, SubCategoryRepository>();
-            services.AddTransient<IProductRepository, ProductRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
 
-            services.AddTransient<ICategoryService, CategoryService>();
-            services.AddTransient<ISubCategoryService, SubCategoryService>();
-            services.AddTransient<IProductService, ProductService>();
-            services.AddTransient<IProductIdentifyService, ProductIdentifyService>();
+            services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<ISubCategoryService, SubCategoryService>();
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IProductIdentifyService, ProductIdentifyService>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddOptions();
-            var appSettings = Configuration.GetSection("AppSettings");
-            services.Configure<AppSettings>(appSettings);
+
+            var config = new AppSettings();
+            Configuration.Bind("AppSettings", config);
+            services.AddSingleton(config);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

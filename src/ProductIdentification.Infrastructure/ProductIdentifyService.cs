@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.CognitiveServices.Vision.CustomVision.Prediction;
 using Microsoft.Azure.CognitiveServices.Vision.CustomVision.Training;
-using Microsoft.Azure.CognitiveServices.Vision.CustomVision.Training.Models;
 using Microsoft.Extensions.Options;
 using ProductIdentification.Core.Models;
 using ProductIdentification.Core.Repositories;
@@ -25,15 +24,14 @@ namespace ProductIdentification.Infrastructure
         private readonly string _endpointUrl;
         private const string PublishedModelName = "ProductIdentification";
 
-        public ProductIdentifyService(IProductRepository productRepository, IOptions<AppSettings> settings)
+        public ProductIdentifyService(IProductRepository productRepository, AppSettings settings)
         {
             _productRepository = productRepository;
-            var settingsValue = settings.Value;
-            _predictionKey = settingsValue.CustomVisionPredictionKey;
-            _trainingKey = settingsValue.CustomVisionTrainingKey;
-            _projectId = settingsValue.CustomVisionProjectId;
-            _predictionId = settingsValue.CustomVisionPredictionId;
-            _endpointUrl = settingsValue.CustomVisionEndpoint;
+            _predictionKey = settings.CustomVisionPredictionKey;
+            _trainingKey = settings.CustomVisionTrainingKey;
+            _projectId = settings.CustomVisionProjectId;
+            _predictionId = settings.CustomVisionPredictionId;
+            _endpointUrl = settings.CustomVisionEndpoint;
         }
 
         public async Task<Product> IdentifyProduct(Stream image)
@@ -44,14 +42,14 @@ namespace ProductIdentification.Infrastructure
                 Endpoint = _endpointUrl
             };
 
-            image.Seek(0, SeekOrigin.Begin);
+            image.Position = 0;
             var result = await endpoint.ClassifyImageAsync(new Guid(_projectId), PublishedModelName, image);
 
             var tag = result.Predictions.OrderByDescending(x => x.Probability).FirstOrDefault()?.TagId;
 
             if (tag == null)
             {
-                throw new Exception("Product not found");
+                return null;
             }
 
             return await _productRepository.Get(tag.Value);
