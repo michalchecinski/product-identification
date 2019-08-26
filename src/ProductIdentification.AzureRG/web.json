@@ -103,7 +103,6 @@
     },
     "CustomVisionProjectId": { "type": "string" },
     "functionAppName": { "type": "string" },
-    "functionStorageAccountName": { "type": "string" },
     "functionStorageAccountType": {
       "type": "string",
       "defaultValue": "Standard_LRS",
