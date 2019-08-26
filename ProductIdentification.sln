@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductIdentification.Data"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductIdentification.Core", "src\ProductIdentification.Core\ProductIdentification.Core.csproj", "{D8F8AA4E-3FF5-4CE1-B2FB-813A3ACD06DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductIdentification.Infrastructure", "src\ProductIdentification.Infrastructure\ProductIdentification.Infrastructure.csproj", "{7700F591-CC7E-4595-98D0-CD105C2D1F88}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductIdentification.Infrastructure", "src\ProductIdentification.Infrastructure\ProductIdentification.Infrastructure.csproj", "{7700F591-CC7E-4595-98D0-CD105C2D1F88}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductIdentification.Functions", "src\ProductIdentification.Functions\ProductIdentification.Functions.csproj", "{FD908E3C-1733-4629-8596-50E273FCA694}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{7700F591-CC7E-4595-98D0-CD105C2D1F88}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7700F591-CC7E-4595-98D0-CD105C2D1F88}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7700F591-CC7E-4595-98D0-CD105C2D1F88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD908E3C-1733-4629-8596-50E273FCA694}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD908E3C-1733-4629-8596-50E273FCA694}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD908E3C-1733-4629-8596-50E273FCA694}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD908E3C-1733-4629-8596-50E273FCA694}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
