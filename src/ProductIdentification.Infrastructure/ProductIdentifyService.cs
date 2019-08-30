@@ -45,7 +45,10 @@ namespace ProductIdentification.Infrastructure
             image.Position = 0;
             var result = await endpoint.ClassifyImageAsync(new Guid(_projectId), PublishedModelName, image);
 
-            var tag = result.Predictions.OrderByDescending(x => x.Probability).FirstOrDefault()?.TagId;
+            var tag = result.Predictions
+                            .Where(x => x.Probability > 0.2)
+                            .OrderByDescending(x => x.Probability)
+                            .FirstOrDefault()?.TagId;
 
             if (tag == null)
             {
@@ -72,7 +75,7 @@ namespace ProductIdentification.Infrastructure
                 {
                     await image.CopyToAsync(stream);
                     stream.Seek(0, SeekOrigin.Begin);
-                    await trainingApi.CreateImagesFromDataAsync(project.Id, stream, new List<Guid>() { tag.Id });
+                    await trainingApi.CreateImagesFromDataAsync(project.Id, stream, new List<Guid>() {tag.Id});
                 }
             }
 
@@ -89,7 +92,6 @@ namespace ProductIdentification.Infrastructure
                 }
 
                 await trainingApi.PublishIterationAsync(project.Id, iteration.Id, PublishedModelName, _predictionId);
-
             }).ConfigureAwait(false);
 #pragma warning restore 4014
 
