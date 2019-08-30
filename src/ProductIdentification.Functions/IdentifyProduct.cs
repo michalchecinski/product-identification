@@ -47,15 +47,6 @@ namespace ProductIdentification.Functions
                 SubCategoryName = product.SubCategory.Name
             };
 
-            //var result = new
-            //{
-            //    Name = "Name",
-            //    GrossPrice = 12.00,
-            //    NetPrice = 10.50,
-            //    CategoryName = "CategoryName",
-            //    SubCategoryName = "SubCategoryName"
-            //};
-
             return new JsonResult(JsonConvert.SerializeObject(result));
         }
     }
