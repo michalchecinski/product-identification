@@ -47,3 +47,5 @@ appsettings.Release.json
 
 #Publish profiles
 PublishProfiles
+
+.idea/
