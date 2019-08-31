@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using ProductIdentification.Core.Models;
+using ProductIdentification.Core.DomainModels;
 
 namespace ProductIdentification.Infrastructure
 {
@@ -11,5 +12,9 @@ namespace ProductIdentification.Infrastructure
         Task<Product> IdentifyProduct(Stream image);
 
         Task<Product> AddProduct(List<IFormFile> images, Product product);
+
+        Task<Guid> TrainProjectAsync();
+
+        Task<bool> TryPublishIteration(Guid iterationId);
     }
 }

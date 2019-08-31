@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.CognitiveServices.Vision.CustomVision.Prediction;
 using Microsoft.Azure.CognitiveServices.Vision.CustomVision.Training;
+using Microsoft.Azure.CognitiveServices.Vision.CustomVision.Training.Models;
 using Microsoft.Extensions.Options;
-using ProductIdentification.Core.Models;
+using ProductIdentification.Core.DomainModels;
 using ProductIdentification.Core.Repositories;
 
 namespace ProductIdentification.Infrastructure
@@ -79,25 +80,47 @@ namespace ProductIdentification.Infrastructure
                 }
             }
 
-#pragma warning disable 4014
-            Task.Run(async () =>
-            {
-                var iteration = await trainingApi.TrainProjectAsync(project.Id);
-
-                while (iteration.Status == "Training")
-                {
-                    Thread.Sleep(1000);
-
-                    iteration = await trainingApi.GetIterationAsync(project.Id, iteration.Id);
-                }
-
-                await trainingApi.PublishIterationAsync(project.Id, iteration.Id, PublishedModelName, _predictionId);
-            }).ConfigureAwait(false);
-#pragma warning restore 4014
-
             product.CustomVisionTagId = tag.Id;
 
             return product;
+        }
+
+        public async Task<Guid> TrainProjectAsync()
+        {
+            CustomVisionTrainingClient trainingApi = new CustomVisionTrainingClient()
+            {
+                ApiKey = _trainingKey,
+                Endpoint = _endpointUrl
+            };
+
+            var project = await trainingApi.GetProjectAsync(new Guid(_projectId));
+            
+            var iteration = await trainingApi.TrainProjectAsync(project.Id);
+
+            return iteration.Id;
+        }
+
+        public async Task<bool> TryPublishIteration(Guid iterationId)
+        {
+            CustomVisionTrainingClient trainingApi = new CustomVisionTrainingClient()
+            {
+                ApiKey = _trainingKey,
+                Endpoint = _endpointUrl
+            };
+
+            var project = await trainingApi.GetProjectAsync(new Guid(_projectId));
+
+            var iteration = await trainingApi.GetIterationAsync(project.Id, iterationId);
+
+            if (iteration.Status != "Training")
+            {
+                await trainingApi.PublishIterationAsync(project.Id, iteration.Id, PublishedModelName, _predictionId);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
