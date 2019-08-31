@@ -112,7 +112,7 @@
       }
     },
     "storageAccountName": {
-      "defaultValue": "[resourceGroup().name]",
+      "defaultValue": "[tolower(take(concat('stor', replace(string.delNumbers(resourceGroup().name),'-','')),24))]",
       "type": "String"
     },
     "storageAccountType": {
