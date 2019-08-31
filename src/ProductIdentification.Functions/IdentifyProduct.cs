@@ -9,7 +9,6 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using ProductIdentification.Core.Models;
 using ProductIdentification.Infrastructure;
 
 namespace ProductIdentification.Functions
@@ -30,7 +29,7 @@ namespace ProductIdentification.Functions
             HttpRequest req,
             ILogger log)
         {
-            Product product = await _identifyService.IdentifyProduct(req.Body);
+            var product = await _identifyService.IdentifyProduct(req.Body);
 
             if (product == null)
             {
