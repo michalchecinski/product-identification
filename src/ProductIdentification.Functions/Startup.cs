@@ -23,11 +23,19 @@ namespace ProductIdentification.Functions
                 options => options.UseSqlServer(sqlConnection));
 
             services.AddLogging();
+            
+            var config = ConfigureAppSettings();
+            services.AddSingleton(config);
 
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IProductTrainingRepository>(s => new ProductTrainingRepository(config.Storage));
 
             services.AddScoped<IProductIdentifyService, ProductIdentifyService>();
+            services.AddScoped<IQueueService, QueueService>();
+        }
 
+        private static AppSettings ConfigureAppSettings()
+        {
             var config = new AppSettings
             {
                 CustomVisionEndpoint = Environment.GetEnvironmentVariable(nameof(AppSettings.CustomVisionEndpoint)),
@@ -37,13 +45,10 @@ namespace ProductIdentification.Functions
                     Environment.GetEnvironmentVariable(nameof(AppSettings.CustomVisionPredictionKey)),
                 CustomVisionProjectId = Environment.GetEnvironmentVariable(nameof(AppSettings.CustomVisionProjectId)),
                 CustomVisionTrainingKey =
-                    Environment.GetEnvironmentVariable(nameof(AppSettings.CustomVisionTrainingKey))
+                    Environment.GetEnvironmentVariable(nameof(AppSettings.CustomVisionTrainingKey)),
+                Storage = Environment.GetEnvironmentVariable(nameof(AppSettings.Storage)),
             };
-
-            services.AddSingleton(config);
-
-            //services.AddOptions();
-            //services.Configure<AppSettings>(configuration.GetSection("AppSettings"));
+            return config;
         }
     }
 }

@@ -126,14 +126,11 @@ namespace ProductIdentification.Web.Controllers
             {
                 var files = model.files;
 
-                Product result;
-
                 var product = _mapper.Map<Product>(model);
-                result = await _productService.AddProduct(product,
+                var result = await _productService.AddProduct(product,
                     model.CategoryName,
                     model.SubCategoryName,
                     files);
-
 
                 return RedirectToAction(nameof(Details), new {id = result.Id});
             }

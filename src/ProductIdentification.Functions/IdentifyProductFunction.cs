@@ -13,18 +13,17 @@ using ProductIdentification.Infrastructure;
 
 namespace ProductIdentification.Functions
 {
-    public class IdentifyProduct
+    public class IdentifyProductFunction
     {
         private readonly IProductIdentifyService _identifyService;
 
-        public IdentifyProduct(IProductIdentifyService identifyService)
+        public IdentifyProductFunction(IProductIdentifyService identifyService)
         {
             _identifyService = identifyService;
         }
 
-
-        [FunctionName("IdentifyProduct")]
-        public async Task<IActionResult> Run(
+        [FunctionName(nameof(IdentifyProduct))]
+        public async Task<IActionResult> IdentifyProduct(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
             HttpRequest req,
             ILogger log)

@@ -62,6 +62,7 @@ namespace ProductIdentification.Web
             services.AddScoped<ISubCategoryService, SubCategoryService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IProductIdentifyService, ProductIdentifyService>();
+            services.AddScoped<IQueueService, QueueService>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
