@@ -110,6 +110,15 @@
       "metadata": {
         "description": "Function storage Account type"
       }
+    },
+    "storageAccountName": {
+      "defaultValue": "[resourceGroup().name]",
+      "type": "String"
+    },
+    "storageAccountType": {
+      "type": "string",
+      "defaultValue": "Standard_LRS",
+      "allowedValues": ["Standard_LRS", "Standard_GRS", "Standard_RAGRS"]
     }
   },
   "variables": {
@@ -347,6 +356,10 @@
           {
             "name": "AppSettings:CustomVisionEndpoint",
             "value": "[reference(parameters('namePrediction'),'2016-02-01-preview').endpoint]"
+          },
+          {
+            "name": "AppSettings:Storage",
+            "value": "[Concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2018-07-01').keys[0].value)]"
           }
         ]
       },
@@ -354,8 +367,8 @@
         "[resourceId('Microsoft.Web/serverfarms', parameters('webHostingPlanName'))]",
         "[resourceId('Microsoft.Sql/servers/databases', parameters('sqlserverName'), parameters('databaseName'))]",
         "[resourceId('Microsoft.CognitiveServices/accounts', parameters('namePrediction'))]",
-        "[resourceId('Microsoft.CognitiveServices/accounts', parameters('nameTraining'))]" //,
-        //"[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+        "[resourceId('Microsoft.CognitiveServices/accounts', parameters('nameTraining'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
       ]
     },
     {
@@ -445,7 +458,8 @@
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', variables('functionsHostingPlanName'))]",
         "[resourceId('Microsoft.Storage/storageAccounts', variables('functionStorageAccountName'))]",
-        "[resourceId('Microsoft.Sql/servers/databases', parameters('sqlserverName'), parameters('databaseName'))]"
+        "[resourceId('Microsoft.Sql/servers/databases', parameters('sqlserverName'), parameters('databaseName'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
       ],
       "properties": {
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('functionsHostingPlanName'))]",
@@ -506,6 +520,10 @@
             {
               "name": "CustomVisionEndpoint",
               "value": "[reference(parameters('namePrediction'),'2016-02-01-preview').endpoint]"
+            },
+            {
+              "name": "Storage",
+              "value": "[Concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2018-07-01').keys[0].value)]"
             }
           ]
         }
@@ -526,6 +544,42 @@
           "Cap": "[float('0.05')]"
         }
       }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "sku": {
+        "name": "[parameters('storageAccountType')]",
+        "tier": "Standard"
+      },
+      "kind": "StorageV2",
+      "name": "[parameters('storageAccountName')]",
+      "apiVersion": "2018-07-01",
+      "location": "[resourceGroup().location]",
+      "tags": {},
+      "scale": null,
+      "properties": {
+        "networkAcls": {
+          "bypass": "AzureServices",
+          "virtualNetworkRules": [],
+          "ipRules": [],
+          "defaultAction": "Allow"
+        },
+        "supportsHttpsTrafficOnly": true,
+        "encryption": {
+          "services": {
+            "file": {
+              "enabled": true
+            },
+            "blob": {
+              "enabled": true
+            }
+          },
+          "keySource": "Microsoft.Storage"
+        },
+        "accessTier": "Hot"
+      },
+      "resources": [],
+      "dependsOn": []
     }
   ]
 }
