@@ -7,7 +7,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using ProductIdentification.Core.Models;
+using ProductIdentification.Core.DomainModels;
 using ProductIdentification.Core.Repositories;
 using ProductIdentification.Infrastructure;
 using ProductIdentification.Web.Models;
