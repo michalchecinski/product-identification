@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Azure.Documents.SystemFunctions;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using ProductIdentification.Infrastructure;
@@ -28,6 +29,10 @@ namespace ProductIdentification.Functions
             HttpRequest req,
             ILogger log)
         {
+            
+            log.LogInformation("Identify product function called via HTTP");
+            log.LogInformation($"Request body isNull: {req.Body.IsNull()}");
+            
             var product = await _identifyService.IdentifyProduct(req.Body);
 
             if (product == null)

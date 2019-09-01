@@ -23,6 +23,9 @@ namespace ProductIdentification.Functions
         public void AddProductToIdentifyService([QueueTrigger(QueueNames.AddProduct, Connection = "Storage")]
                                                 string message, ILogger log)
         {
+            log.LogInformation("AddProductToIdentifyService function called");
+            log.LogInformation($"Message: {message}");
+            
             var parsedMessage = JsonConvert.DeserializeObject<AddProductMessage>(message);
             var productTrainingModel = new ProductTrainingModel(parsedMessage.ProductId);
             _productTrainingRepository.Add(productTrainingModel);

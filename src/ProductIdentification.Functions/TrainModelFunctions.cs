@@ -13,7 +13,7 @@ namespace ProductIdentification.Functions
 {
     public class TrainModelFunctions
     {
-        private const string TrainModelSchedule = "0 0 */1 * * *";
+        private const string TrainModelSchedule = "0 0 */2 * * *";
         private readonly IProductIdentifyService _productIdentifyService;
         private readonly IQueueService _queueService;
         private readonly IProductTrainingRepository _productTrainingRepository;
@@ -32,7 +32,8 @@ namespace ProductIdentification.Functions
         public async Task TrainModelManually([QueueTrigger(QueueNames.TrainModel, Connection = "Storage")] TrainModelMessage message,
                                        ILogger log)
         {
-            log.LogInformation($"C# Queue trigger function processed: {message}");
+            log.LogInformation("PublishModel function called");
+            log.LogInformation($"Message: {message}");
 
             await TrainModel();
         }

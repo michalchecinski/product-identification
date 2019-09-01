@@ -29,6 +29,9 @@
         public async Task PublishModel([QueueTrigger(QueueNames.PublishModel, Connection = "Storage")]PublishModelMessage message,
                                        ILogger log)
         {
+            log.LogInformation("PublishModel function called");
+            log.LogInformation($"Message with iterationId: {message.IterationId}");
+            
             await PublishModel(message);
         }
 
