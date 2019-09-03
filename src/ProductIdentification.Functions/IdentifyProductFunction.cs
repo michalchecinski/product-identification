@@ -31,7 +31,6 @@ namespace ProductIdentification.Functions
         {
             
             log.LogInformation("Identify product function called via HTTP");
-            log.LogInformation($"Request body isNull: {req.Body.IsNull()}");
             
             var product = await _identifyService.IdentifyProduct(req.Body);
 
@@ -39,6 +38,8 @@ namespace ProductIdentification.Functions
             {
                 return new NotFoundObjectResult("This product cannot be found.");
             }
+            
+            log.LogInformation("Returning result.");
 
             var result = new
             {
