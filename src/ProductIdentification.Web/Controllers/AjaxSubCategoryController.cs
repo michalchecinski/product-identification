@@ -30,16 +30,16 @@ namespace ProductIdentification.Web.Controllers
 
         public async Task<ActionResult> GetSubcategories(string category)
         {
-            var subCategory = new List<string>();
+            List<string> subCategory;
             try
             {
                 subCategory = await _subCategoryService.GetSubcategoriesByCategoryName(category);
             }
-            catch (Exception e)
+            catch (ArgumentException e)
             {
-
+                return new BadRequestObjectResult(e.Message);
             }
-            
+
             return new JsonResult(subCategory);
         }
     }

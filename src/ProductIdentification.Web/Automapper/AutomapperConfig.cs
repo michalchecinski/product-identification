@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
-using ProductIdentification.Core.Models;
+using ProductIdentification.Core.DomainModels;
 using ProductIdentification.Web.Models;
 
 namespace ProductIdentification.Web.Automapper
