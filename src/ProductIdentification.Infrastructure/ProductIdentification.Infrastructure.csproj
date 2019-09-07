@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ProductIdentification.Common\ProductIdentification.Common.csproj" />
     <ProjectReference Include="..\ProductIdentification.Core\ProductIdentification.Core.csproj" />
     <ProjectReference Include="..\ProductIdentification.Data\ProductIdentification.Data.csproj" />
   </ItemGroup>
