@@ -23,7 +23,6 @@ namespace ProductIdentification.Infrastructure
         public ProductService(IProductRepository productRepository,
                               ICategoryRepository categoryRepository,
                               ISubCategoryRepository subCategoryRepository,
-                              IProductIdentifyService productIdentifyService,
                               IQueueService queueService,
                               IFileRepository fileRepository)
         {
