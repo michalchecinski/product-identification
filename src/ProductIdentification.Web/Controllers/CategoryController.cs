@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ProductIdentification.Core.Models;
+using ProductIdentification.Core.DomainModels;
 using ProductIdentification.Infrastructure;
 using ProductIdentification.Web.Models;
 

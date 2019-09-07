@@ -1,8 +1,9 @@
-﻿namespace ProductIdentification.Data
+﻿using ProductIdentification.Core.DomainModels;
+
+namespace ProductIdentification.Data
 {
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
-    using Core.Models;
 
     public class ProductIdentificationContext : IdentityDbContext
     {

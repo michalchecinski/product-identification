@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ProductIdentification.Core.Models;
+using ProductIdentification.Core.DomainModels;
 using ProductIdentification.Core.Repositories;
 
 namespace ProductIdentification.Infrastructure
@@ -124,7 +124,7 @@ namespace ProductIdentification.Infrastructure
             var categoryObject = await _categoryRepository.GetCategoryByNameAsync(category);
             if (categoryObject == null)
             {
-                throw new Exception($"Category with name: {category} does not exist.");
+                throw new ArgumentException($"Category with name: {category} does not exist.");
             }
             var categoryId = categoryObject.Id;
             return await _subCategoryRepository.GetNamesByCategory(categoryId);

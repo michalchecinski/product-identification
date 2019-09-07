@@ -1,8 +1,8 @@
-﻿namespace ProductIdentification.Core.Models
-{
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
+namespace ProductIdentification.Core.DomainModels
+{
     public class BaseEntity
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using ProductIdentification.Core.Models;
+using ProductIdentification.Core.DomainModels;
 
 namespace ProductIdentification.Infrastructure
 {

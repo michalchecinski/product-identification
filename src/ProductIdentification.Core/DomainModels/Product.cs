@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ProductIdentification.Core.Models
+namespace ProductIdentification.Core.DomainModels
 {
     public class Product : BaseEntity
     {

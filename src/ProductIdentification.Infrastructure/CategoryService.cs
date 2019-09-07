@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ProductIdentification.Core.Models;
+using ProductIdentification.Core.DomainModels;
 using ProductIdentification.Core.Repositories;
 
 namespace ProductIdentification.Infrastructure

@@ -5,7 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using ProductIdentification.Core.Models;
+using ProductIdentification.Core.DomainModels;
+using ProductIdentification.Core.Models.Messages;
 using ProductIdentification.Core.Repositories;
 
 namespace ProductIdentification.Infrastructure
@@ -16,16 +17,19 @@ namespace ProductIdentification.Infrastructure
         private readonly ICategoryRepository _categoryRepository;
         private readonly ISubCategoryRepository _subCategoryRepository;
         private readonly IProductIdentifyService _productIdentifyService;
+        private readonly IQueueService _queueService;
 
         public ProductService(IProductRepository productRepository,
                               ICategoryRepository categoryRepository,
                               ISubCategoryRepository subCategoryRepository,
-                              IProductIdentifyService productIdentifyService)
+                              IProductIdentifyService productIdentifyService,
+                              IQueueService queueService)
         {
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
             _subCategoryRepository = subCategoryRepository;
             _productIdentifyService = productIdentifyService;
+            _queueService = queueService;
         }
 
         public async Task<List<Product>> GetAllProducts()
@@ -160,6 +164,9 @@ namespace ProductIdentification.Infrastructure
             await _productIdentifyService.AddProduct(images, product);
 
             await _productRepository.AddProductAsync(product);
+
+            await _queueService.SendMessageAsync(QueueNames.AddProduct, new AddProductMessage(product.Id));
+            
             return product;
         }
 
