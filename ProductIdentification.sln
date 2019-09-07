@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductIdentification.Infra
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductIdentification.Functions", "src\ProductIdentification.Functions\ProductIdentification.Functions.csproj", "{FD908E3C-1733-4629-8596-50E273FCA694}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductIdentification.Common", "src\ProductIdentification.Common\ProductIdentification.Common.csproj", "{6FCB8FBD-A056-4EE9-A5E0-89273F7E6B03}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{FD908E3C-1733-4629-8596-50E273FCA694}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD908E3C-1733-4629-8596-50E273FCA694}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD908E3C-1733-4629-8596-50E273FCA694}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6FCB8FBD-A056-4EE9-A5E0-89273F7E6B03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FCB8FBD-A056-4EE9-A5E0-89273F7E6B03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FCB8FBD-A056-4EE9-A5E0-89273F7E6B03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FCB8FBD-A056-4EE9-A5E0-89273F7E6B03}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

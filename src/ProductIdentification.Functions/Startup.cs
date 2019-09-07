@@ -29,6 +29,7 @@ namespace ProductIdentification.Functions
 
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductTrainingRepository>(s => new ProductTrainingRepository(config.Storage));
+            services.AddScoped<IFileRepository>(s => new AzureFileRepository(config.Storage));
 
             services.AddScoped<IProductIdentifyService, ProductIdentifyService>();
             services.AddScoped<IQueueService, QueueService>();

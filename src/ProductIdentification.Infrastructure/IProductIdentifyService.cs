@@ -11,7 +11,7 @@ namespace ProductIdentification.Infrastructure
     {
         Task<Product> IdentifyProduct(Stream image);
 
-        Task<Product> AddProduct(List<IFormFile> images, Product product);
+        Task<Product> AddProduct(List<Stream> images, Product product);
 
         Task<Guid> TrainProjectAsync();
 
