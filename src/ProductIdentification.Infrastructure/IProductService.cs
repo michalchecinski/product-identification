@@ -14,7 +14,6 @@ namespace ProductIdentification.Infrastructure
         Task<List<Product>> GetAllProducts();
         Task<List<Product>> GetAllBySubCategory(int subCategoryId);
         Task<List<Product>> GetAllByCategory(int categoryId);
-        Task<Product> AddProduct(Product product, List<IFormFile> images);
         Task<Product> UpdateProduct(Product product);
         Task<List<Product>> GetAll();
         Task<Product> AddProduct(Product product, string categoryName, string subCategoryName,
