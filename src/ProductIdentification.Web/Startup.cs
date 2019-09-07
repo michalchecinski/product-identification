@@ -49,6 +49,11 @@ namespace ProductIdentification.Web
             services.AddDbContext<ProductIdentificationContext>(options =>
 
             options.UseSqlServer(Configuration.GetConnectionString("DBConnection")));
+            
+            services.AddOptions();
+            var config = new AppSettings();
+            Configuration.Bind("AppSettings", config);
+            services.AddSingleton(config);
 
             services.AddDefaultIdentity<IdentityUser>()
                 .AddDefaultUI(UIFramework.Bootstrap4)
@@ -57,6 +62,7 @@ namespace ProductIdentification.Web
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IFileRepository>(s => new AzureFileRepository(config.Storage));
 
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<ISubCategoryService, SubCategoryService>();
@@ -65,12 +71,6 @@ namespace ProductIdentification.Web
             services.AddScoped<IQueueService, QueueService>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
-            services.AddOptions();
-
-            var config = new AppSettings();
-            Configuration.Bind("AppSettings", config);
-            services.AddSingleton(config);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

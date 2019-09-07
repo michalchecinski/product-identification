@@ -59,7 +59,7 @@ namespace ProductIdentification.Infrastructure
             return await _productRepository.Get(tag.Value);
         }
 
-        public async Task<Product> AddProduct(List<IFormFile> images, Product product)
+        public async Task<Product> AddProduct(List<Stream> images, Product product)
         {
             CustomVisionTrainingClient trainingApi = new CustomVisionTrainingClient()
             {
@@ -72,12 +72,8 @@ namespace ProductIdentification.Infrastructure
 
             foreach (var image in images)
             {
-                using (var stream = new MemoryStream())
-                {
-                    await image.CopyToAsync(stream);
-                    stream.Seek(0, SeekOrigin.Begin);
-                    await trainingApi.CreateImagesFromDataAsync(project.Id, stream, new List<Guid>() {tag.Id});
-                }
+                image.Seek(0, SeekOrigin.Begin);
+                await trainingApi.CreateImagesFromDataAsync(project.Id, image, new List<Guid>() {tag.Id});
             }
 
             product.CustomVisionTagId = tag.Id;
@@ -94,7 +90,7 @@ namespace ProductIdentification.Infrastructure
             };
 
             var project = await trainingApi.GetProjectAsync(new Guid(_projectId));
-            
+
             var iteration = await trainingApi.TrainProjectAsync(project.Id);
 
             return iteration.Id;

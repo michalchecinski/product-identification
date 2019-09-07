@@ -17,6 +17,7 @@
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.29" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ProductIdentification.Common\ProductIdentification.Common.csproj" />
     <ProjectReference Include="..\ProductIdentification.Infrastructure\ProductIdentification.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup>
