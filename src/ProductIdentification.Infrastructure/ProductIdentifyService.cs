@@ -68,7 +68,16 @@ namespace ProductIdentification.Infrastructure
             };
 
             var project = await trainingApi.GetProjectAsync(new Guid(_projectId));
-            var tag = await trainingApi.CreateTagAsync(project.Id, product.TagName);
+            Tag tag;
+            
+            try
+            {
+                tag = await trainingApi.CreateTagAsync(project.Id, product.TagName);
+            }
+            catch (CustomVisionErrorException e)
+            {
+                throw new Exception(e.Body.Message, e);
+            }
 
             foreach (var image in images)
             {
