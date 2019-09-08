@@ -94,14 +94,14 @@ namespace ProductIdentification.Data.Repositories
                 var folder = cloudBlobContainer.GetDirectoryReference(splitted[1]);
                 for (int i = 2; i < splitted.Length; i++)
                 {
-                    folder = cloudBlobContainer.GetDirectoryReference(splitted[i]);
+                    folder = folder.GetDirectoryReference(splitted[i]);
                 }
 
-                results = folder.ListBlobs();
+                results = folder.ListBlobsSegmentedAsync(false, BlobListingDetails.Metadata, 500, null, null, null).Result.Results;
             }
             else
             {
-                results = cloudBlobContainer.ListBlobs();
+                results = cloudBlobContainer.ListBlobsSegmentedAsync(null).Result.Results;
             }
             
             List<string> blobsList = new List<string>();
