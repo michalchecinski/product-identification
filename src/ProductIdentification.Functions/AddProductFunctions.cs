@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
@@ -41,6 +43,11 @@ namespace ProductIdentification.Functions
             var folder = product.StoragePathOriginal();
 
             var fileNames = await _fileRepository.FileNamesList(folder);
+
+            if (!fileNames.Any())
+            {
+                throw new Exception($"There are no original files in folder: [{folder}] for product: [{product.Id}]");
+            }
 
             var images = new List<Stream>();
 
