@@ -16,5 +16,6 @@ namespace ProductIdentification.Infrastructure
         Task<Guid> TrainProjectAsync();
 
         Task<bool> TryPublishIteration(Guid iterationId);
+        Task UpdateProduct(List<Stream> images, Product product);
     }
 }
