@@ -69,6 +69,7 @@ namespace ProductIdentification.Web
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IProductIdentifyService, ProductIdentifyService>();
             services.AddScoped<IQueueService, QueueService>();
+            services.AddScoped<IReviewProductPhotosService, ReviewProductPhotosService>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
