@@ -64,5 +64,39 @@ namespace ProductIdentification.Functions
             var productTrainingModel = new ProductTrainingModel(message.ProductId);
             _productTrainingRepository.Add(productTrainingModel);
         }
+        
+        [FunctionName(nameof(UpdateProductInIdentifyService))]
+        public async Task UpdateProductInIdentifyService([QueueTrigger(QueueNames.UpdateProduct, Connection = "Storage")]
+                                                      UpdateProductMessage message, ILogger log)
+        {
+            var product = await _productRepository.Get(message.ProductId);
+
+            var folder = product.StoragePathVerified();
+
+            var fileNames = await _fileRepository.FileNamesList(folder);
+
+            if (!fileNames.Any())
+            {
+                throw new Exception($"There are no verified files in folder: [{folder}] for product: [{product.Id}]");
+            }
+
+            var images = new List<Stream>();
+
+            foreach (var fileName in fileNames)
+            {
+                var file = await _fileRepository.GetFileContentAsync(folder, fileName);
+                images.Add(file);
+            }
+            
+            await _productIdentifyService.UpdateProduct(images, product);
+
+            var productTrainingModel = new ProductTrainingModel(message.ProductId);
+            _productTrainingRepository.Add(productTrainingModel);
+            
+            foreach (var fileName in fileNames)
+            {
+                await _fileRepository.CopyFile(folder, product.StoragePathAddedAfterVerification(), fileName);
+            }
+        }
     }
 }

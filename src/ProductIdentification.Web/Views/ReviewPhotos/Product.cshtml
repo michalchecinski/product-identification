@@ -1,0 +1,48 @@
+﻿@model ProductIdentification.Core.Models.ReviewProductPhotosDto
+
+@{
+    ViewBag.Title = "Review photos";
+    Layout = "_Layout";
+}
+
+<h2>Review photos for product: @Model.Product.Category.Name / @Model.Product.SubCategory.Name / @Model.Product.Name</h2>
+
+@if (!Model.Photos.Any())
+{
+    <h3>There is no photos to review for this product.</h3>
+}
+else
+{
+    foreach (var photo in @Model.Photos)
+    {
+        <div class="row border border-primary align-items-center m-4">
+            <div class="col-md-8 text-center">
+                <img src="@photo.Path" width="200" height="200" class="img-fluid" alt="Responsive image">
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <form method="post" asp-controller="ReviewPhotos" asp-action="Accept">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input name="photoName" type="hidden" value="@photo.Name">
+                            <input name="productId" type="hidden" value="@Model.Product.Id">
+                            <div class="form-group">
+                                <input type="submit" value="Accept" class="btn btn-success"/>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-6">
+                        <form method="post" asp-controller="ReviewPhotos" asp-action="Reject">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            @Html.HiddenFor(x => photo.Name)
+                            @Html.HiddenFor(x => @Model.Product.Id)
+                            <div class="form-group">
+                                <input type="submit" value="Reject" class="btn btn-danger"/>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}

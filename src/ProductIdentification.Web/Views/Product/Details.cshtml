@@ -4,10 +4,12 @@
     ViewData["Title"] = "Details";
 }
 
+<h2> @Model.CategoryName / @Model.SubCategoryName / @Model.Name</h2>
+
 <h1>Details</h1>
 
 <div>
-    <h4>ProductViewModel</h4>
+    <h4>Product: @Model.Name</h4>
     <hr />
     <dl class="row">
         <dt>
@@ -43,6 +45,8 @@
     </dl>
 </div>
 <div>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    <a asp-action="Index">Back to List</a>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-info" })
+</div>
+<div>
+    @Html.ActionLink("Review product photos", "Product", "ReviewPhotos", new { id = Model.Id }, new { @class = "btn btn-primary" })
 </div>
