@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Documents.SystemFunctions;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using ProductIdentification.Common;
+using ProductIdentification.Core.Repositories;
 using ProductIdentification.Infrastructure;
 
 namespace ProductIdentification.Functions
@@ -17,10 +19,13 @@ namespace ProductIdentification.Functions
     public class IdentifyProductFunction
     {
         private readonly IProductIdentifyService _identifyService;
+        private readonly IFileRepository _fileRepository;
 
-        public IdentifyProductFunction(IProductIdentifyService identifyService)
+        public IdentifyProductFunction(IProductIdentifyService identifyService,
+                                       IFileRepository fileRepository)
         {
             _identifyService = identifyService;
+            _fileRepository = fileRepository;
         }
 
         [FunctionName(nameof(IdentifyProduct))]
@@ -29,9 +34,12 @@ namespace ProductIdentification.Functions
             HttpRequest req,
             ILogger log)
         {
-            
             log.LogInformation("Identify product function called via HTTP");
             
+            var stream = new MemoryStream();
+            await req.Body.CopyToAsync(stream);
+            stream.Position = 0;
+
             var product = await _identifyService.IdentifyProduct(req.Body);
 
             if (product == null)
@@ -39,8 +47,11 @@ namespace ProductIdentification.Functions
                 return new NotFoundObjectResult("This product cannot be found.");
             }
             
-            log.LogInformation("Returning result.");
+            log.LogInformation("Uploading blob");
+            _fileRepository.SaveFileAsync(product.StoragePathToVerify(), Guid.NewGuid() + ".jpg", stream)
+                           .RunAndForget();
 
+            log.LogInformation("Returning result.");
             var result = new
             {
                 product.Id,
