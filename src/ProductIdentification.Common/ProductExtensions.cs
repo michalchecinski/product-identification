@@ -8,10 +8,9 @@ namespace ProductIdentification.Common
         {
             return $"{product.Category.Name}/{product.SubCategory.Name}/{product.Name}".Replace(" ", "-");
         }
-        
-        public static string StoragePathOriginal(this Product product)
-        {
-            return $"{product.StoragePath()}/original";
-        }
+
+        public static string StoragePathOriginal(this Product product) => $"{product.StoragePath()}/original";
+
+        public static string StoragePathToVerify(this Product product) => $"{product.StoragePath()}/to-verify";
     }
 }
