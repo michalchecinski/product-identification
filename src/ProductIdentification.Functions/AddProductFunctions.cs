@@ -66,8 +66,8 @@ namespace ProductIdentification.Functions
         }
         
         [FunctionName(nameof(UpdateProductInIdentifyService))]
-        public async Task UpdateProductInIdentifyService([QueueTrigger(QueueNames.AddProductToTrain, Connection = "Storage")]
-                                                      AddProductMessage message, ILogger log)
+        public async Task UpdateProductInIdentifyService([QueueTrigger(QueueNames.UpdateProduct, Connection = "Storage")]
+                                                      UpdateProductMessage message, ILogger log)
         {
             var product = await _productRepository.Get(message.ProductId);
 
