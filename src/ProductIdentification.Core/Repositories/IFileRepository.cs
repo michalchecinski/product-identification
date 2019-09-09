@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using ProductIdentification.Core.Models;
 
 namespace ProductIdentification.Core.Repositories
 {
@@ -11,6 +12,6 @@ namespace ProductIdentification.Core.Repositories
         Task CopyFile(string sourceFolderName, string targetFolderName, string sourceFileName, string destinationFileName);
         Task CopyFile(string sourceFolderName, string targetFolderName, string fileName);
         Task<IEnumerable<string>> FileNamesList(string folderName);
-
+        Task<IEnumerable<PhotoFile>> FilesList(string folderName);
     }
 }
