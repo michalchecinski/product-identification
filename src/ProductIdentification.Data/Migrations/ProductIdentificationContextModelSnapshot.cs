@@ -15,7 +15,7 @@ namespace ProductIdentification.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
+                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -184,7 +184,7 @@ namespace ProductIdentification.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("ProductIdentification.Core.Models.Category", b =>
+            modelBuilder.Entity("ProductIdentification.Core.DomainModels.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -197,7 +197,7 @@ namespace ProductIdentification.Data.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("ProductIdentification.Core.Models.Product", b =>
+            modelBuilder.Entity("ProductIdentification.Core.DomainModels.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -224,7 +224,7 @@ namespace ProductIdentification.Data.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("ProductIdentification.Core.Models.SubCategory", b =>
+            modelBuilder.Entity("ProductIdentification.Core.DomainModels.SubCategory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -286,22 +286,22 @@ namespace ProductIdentification.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("ProductIdentification.Core.Models.Product", b =>
+            modelBuilder.Entity("ProductIdentification.Core.DomainModels.Product", b =>
                 {
-                    b.HasOne("ProductIdentification.Core.Models.Category", "Category")
+                    b.HasOne("ProductIdentification.Core.DomainModels.Category", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("ProductIdentification.Core.Models.SubCategory", "SubCategory")
+                    b.HasOne("ProductIdentification.Core.DomainModels.SubCategory", "SubCategory")
                         .WithMany("Products")
                         .HasForeignKey("SubCategoryId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("ProductIdentification.Core.Models.SubCategory", b =>
+            modelBuilder.Entity("ProductIdentification.Core.DomainModels.SubCategory", b =>
                 {
-                    b.HasOne("ProductIdentification.Core.Models.Category", "Category")
+                    b.HasOne("ProductIdentification.Core.DomainModels.Category", "Category")
                         .WithMany("SubCategories")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict);
