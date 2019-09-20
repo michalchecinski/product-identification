@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProductIdentification.Core.DomainModels;
@@ -12,6 +13,7 @@ using ProductIdentification.Infrastructure;
 
 namespace ProductIdentification.Web.Controllers
 {
+    [Authorize]
     public class IdentifyProductController : Controller
     {
         private readonly IProductIdentifyService _productIdentifyService;
