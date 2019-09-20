@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -25,11 +26,13 @@ namespace ProductIdentification.Web
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true) //load base settings
-                .AddJsonFile("appsettings.local.json", optional: true, reloadOnChange: true) //load local settings
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true) //load environment settings
-                .AddEnvironmentVariables();
+                          .SetBasePath(env.ContentRootPath)
+                          .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true) //load base settings
+                          .AddJsonFile("appsettings.local.json", optional: true,
+                              reloadOnChange: true) //load local settings
+                          .AddJsonFile($"appsettings.{env.EnvironmentName}.json",
+                              optional: true) //load environment settings
+                          .AddEnvironmentVariables();
 
             Configuration = builder.Build();
         }
@@ -46,18 +49,24 @@ namespace ProductIdentification.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddDbContext<ProductIdentificationContext>(options =>
+            services.AddAuthentication()
+                    .AddCookie(options =>
+                    {
+                        options.LoginPath = "/login";
+                        options.LogoutPath = "/logout";
+                    });
 
-            options.UseSqlServer(Configuration.GetConnectionString("DBConnection")));
-            
+            services.AddDbContext<ProductIdentificationContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DBConnection")));
+
             services.AddOptions();
             var config = new AppSettings();
             Configuration.Bind("AppSettings", config);
             services.AddSingleton(config);
 
             services.AddDefaultIdentity<IdentityUser>()
-                .AddDefaultUI(UIFramework.Bootstrap4)
-                .AddEntityFrameworkStores<ProductIdentificationContext>();
+                    .AddRoles<IdentityRole>()
+                    .AddEntityFrameworkStores<ProductIdentificationContext>();
 
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
@@ -71,9 +80,21 @@ namespace ProductIdentification.Web
             services.AddScoped<IQueueService, QueueService>();
             services.AddScoped<IReviewProductPhotosService, ReviewProductPhotosService>();
 
+            if (IsLocalhost())
+            {
+                services.AddScoped<IEmailSender, LocalhostEmailSender>();
+            }
+
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc()
+                    .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+        }
+
+        private bool IsLocalhost()
+        {
+            bool.TryParse(Environment.GetEnvironmentVariable("IsLocalhost"), out var value);
+            return value;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
