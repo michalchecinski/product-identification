@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -10,6 +11,7 @@ using ProductIdentification.Web.Models;
 
 namespace ProductIdentification.Web.Controllers
 {
+    [Authorize]
     public class SubCategoryController : Controller
     {
         private readonly ICategoryService _categoryService;

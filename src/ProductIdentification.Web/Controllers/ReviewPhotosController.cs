@@ -1,9 +1,12 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ProductIdentification.Core.Models.Roles;
 using ProductIdentification.Infrastructure;
 
 namespace ProductIdentification.Web.Controllers
 {
+    [Authorize(Roles = Role.DataManager)]
     public class ReviewPhotosController : Controller
     {
         private readonly IReviewProductPhotosService _reviewProductPhotosService;
