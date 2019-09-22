@@ -32,25 +32,28 @@
             <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                 <partial name="_LoginPartial"/>
                 <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Category" asp-action="Index">Categories</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="SubCategory" asp-action="Index">Subcategories</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Index">Products</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="IdentifyProduct" asp-action="Index">Identify Product</a>
-                    </li>
-                     @if (User.IsInRole(Role.Manager) || User.IsInRole(Role.Admin))
-                     {
-                         <li class="nav-item">
-                             <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Manage users</a>
-                         </li>
-                     }
-                     @* <li class="nav-item"> *@
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Category" asp-action="Index">Categories</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="SubCategory" asp-action="Index">Subcategories</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Index">Products</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="IdentifyProduct" asp-action="Index">Identify Product</a>
+                        </li>
+                        @if (User.IsInRole(Role.Manager) || User.IsInRole(Role.Admin))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Manage users</a>
+                            </li>
+                        }
+                    }
+                    @* <li class="nav-item"> *@
                     @*     <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a> *@
                     @* </li> *@
                 </ul>
