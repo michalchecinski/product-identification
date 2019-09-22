@@ -33,6 +33,7 @@ namespace ProductIdentification.Functions
 
             services.AddScoped<IProductIdentifyService, ProductIdentifyService>();
             services.AddScoped<IQueueService, QueueService>();
+            services.AddScoped<IEmailService, EmailService>();
         }
 
         private static AppSettings ConfigureAppSettings()
