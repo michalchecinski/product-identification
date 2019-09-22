@@ -6,5 +6,6 @@
         public const string TrainModel = "train-model";
         public const string AddProduct = "add-product";
         public const string UpdateProduct = "update-product";
+        public const string SendEmail = "send-email";
     }
 }
