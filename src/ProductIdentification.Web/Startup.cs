@@ -84,6 +84,10 @@ namespace ProductIdentification.Web
             {
                 services.AddScoped<IEmailSender, LocalhostEmailSender>();
             }
+            else
+            {
+                services.AddScoped<IEmailSender, QueueEmailSender>();
+            }
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
