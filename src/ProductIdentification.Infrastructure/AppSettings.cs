@@ -14,5 +14,7 @@ namespace ProductIdentification.Infrastructure
         public string CustomVisionPredictionId { get; set; }
         public string CustomVisionEndpoint { get; set; }
         public string Storage { get; set; }
+        public string EmailFrom { get; set; }
+        public string EmailPassword { get; set; }
     }
 }
