@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace ProductIdentification.Infrastructure
 {
-    public class LocalhostEmailSender : IEmailSender
+    public class LocalhostEmailService : IEmailService
     {
         public async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
