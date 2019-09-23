@@ -8,34 +8,36 @@ namespace ProductIdentification.Infrastructure
     {
         private readonly string _fromEmail;
         private readonly string _emailPassword;
-        
+        private readonly string _smtpHost;
+
         public EmailService(AppSettings settings)
         {
             _fromEmail = settings.EmailFrom;
             _emailPassword = settings.EmailPassword;
-        }
-        
-        public async Task SendEmail(string email, string title, string htmlMessage)
-        {
-            MailMessage message = new MailMessage(); 
-            message.From = new MailAddress("FromMailAddress");  
-            message.To.Add(new MailAddress(email));  
-            message.Subject = title;  
-            message.IsBodyHtml = true;
-            message.Body = htmlMessage;
-            
-            var smtp = GetSmtpClient();
-            smtp.Send(message); 
+            _smtpHost = settings.EmailSmtpHostPassword;
         }
 
-        private static SmtpClient GetSmtpClient()
+        public async Task SendEmailAsync(string email, string title, string htmlMessage)
+        {
+            MailMessage message = new MailMessage();
+            message.From = new MailAddress(_fromEmail);
+            message.To.Add(new MailAddress(email));
+            message.Subject = title;
+            message.IsBodyHtml = true;
+            message.Body = htmlMessage;
+
+            var smtp = GetSmtpClient();
+            smtp.Send(message);
+        }
+
+        private SmtpClient GetSmtpClient()
         {
             SmtpClient smtp = new SmtpClient();
             smtp.Port = 587;
-            smtp.Host = "smtp.gmail.com";
+            smtp.Host = _smtpHost;
             smtp.EnableSsl = true;
             smtp.UseDefaultCredentials = false;
-            smtp.Credentials = new NetworkCredential("FromMailAddress", "password");
+            smtp.Credentials = new NetworkCredential(_fromEmail, _emailPassword);
             smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
             return smtp;
         }

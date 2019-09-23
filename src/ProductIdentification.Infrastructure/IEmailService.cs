@@ -4,6 +4,6 @@ namespace ProductIdentification.Infrastructure
 {
     public interface IEmailService
     {
-        Task SendEmail(string email, string title, string htmlMessage);
+        Task SendEmailAsync(string email, string title, string htmlMessage);
     }
 }
