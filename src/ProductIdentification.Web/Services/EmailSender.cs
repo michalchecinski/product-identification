@@ -1,18 +1,15 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using ProductIdentification.Core.Models.Messages;
+using ProductIdentification.Infrastructure;
 
-namespace ProductIdentification.Infrastructure
+namespace ProductIdentification.Web.Services
 {
-    public class QueueEmailSender : IEmailSender
+    public class EmailSender : IEmailSender
     {
         private readonly IQueueService _queueService;
 
-        public QueueEmailSender(IQueueService queueService)
+        public EmailSender(IQueueService queueService)
         {
             _queueService = queueService;
         }

@@ -22,7 +22,7 @@ namespace ProductIdentification.Functions
         {
             log.LogInformation($"Sending email to: {emailMessage.Email} {emailMessage.Title}");
 
-            _emailService.SendEmail(emailMessage.Email, emailMessage.Title, emailMessage.HtmlMessage);
+            _emailService.SendEmailAsync(emailMessage.Email, emailMessage.Title, emailMessage.HtmlMessage);
             
             log.LogInformation($"Email sent to: {emailMessage.Email} {emailMessage.Title}");
         }

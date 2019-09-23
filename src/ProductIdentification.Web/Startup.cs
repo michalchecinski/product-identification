@@ -18,6 +18,7 @@ using ProductIdentification.Core.Repositories;
 using ProductIdentification.Data;
 using ProductIdentification.Data.Repositories;
 using ProductIdentification.Infrastructure;
+using ProductIdentification.Web.Services;
 
 namespace ProductIdentification.Web
 {
@@ -80,25 +81,12 @@ namespace ProductIdentification.Web
             services.AddScoped<IQueueService, QueueService>();
             services.AddScoped<IReviewProductPhotosService, ReviewProductPhotosService>();
 
-            if (IsLocalhost())
-            {
-                services.AddScoped<IEmailSender, LocalhostEmailSender>();
-            }
-            else
-            {
-                services.AddScoped<IEmailSender, QueueEmailSender>();
-            }
+            services.AddScoped<IEmailSender, EmailSender>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddMvc()
                     .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-        }
-
-        private bool IsLocalhost()
-        {
-            bool.TryParse(Environment.GetEnvironmentVariable("IsLocalhost"), out var value);
-            return value;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
