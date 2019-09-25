@@ -33,6 +33,8 @@ namespace ProductIdentification.Functions
 
             services.AddScoped<IProductIdentifyService, ProductIdentifyService>();
             services.AddScoped<IQueueService, QueueService>();
+            services.AddScoped<IEmailService, EmailService>();
+            
         }
 
         private static AppSettings ConfigureAppSettings()
@@ -48,6 +50,8 @@ namespace ProductIdentification.Functions
                 CustomVisionTrainingKey =
                     Environment.GetEnvironmentVariable(nameof(AppSettings.CustomVisionTrainingKey)),
                 Storage = Environment.GetEnvironmentVariable(nameof(AppSettings.Storage)),
+                EmailFrom = Environment.GetEnvironmentVariable(nameof(AppSettings.EmailFrom)),
+                EmailPassword = Environment.GetEnvironmentVariable(nameof(AppSettings.EmailPassword)),
             };
             return config;
         }

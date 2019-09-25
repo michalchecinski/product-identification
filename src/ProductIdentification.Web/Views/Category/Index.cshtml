@@ -1,4 +1,5 @@
-﻿@model IEnumerable<ProductIdentification.Web.Models.CategoryViewModel>
+﻿@using ProductIdentification.Core.Models.Roles
+@model IEnumerable<ProductIdentification.Web.Models.CategoryViewModel>
 
 @{
     ViewData["Title"] = "List of categories";
@@ -16,7 +17,10 @@
             @Html.DisplayNameFor(model => model.Name)
         </th>
         <th></th>
-        <th></th>
+        @if (User.IsInRole(Role.Admin) || (User.IsInRole(Role.WarehouseMan) && User.IsInRole(Role.Manager)))
+        {
+            <th></th>
+        }
     </tr>
     </thead>
     <tbody>
@@ -32,9 +36,12 @@
             <td>
                 @Html.ActionLink("SubCategories", "ListFromCategory", "SubCategory", new { id = item.Id }, new { @class = "btn btn-info" })
             </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-warning" })
-            </td>
+            @if (User.IsInRole(Role.Admin) || (User.IsInRole(Role.WarehouseMan) && User.IsInRole(Role.Manager)))
+            {
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new {id = item.Id}, new {@class = "btn btn-warning"})
+                </td>
+            }
         </tr>
     }
     </tbody>

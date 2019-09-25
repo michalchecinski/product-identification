@@ -4,12 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProductIdentification.Core.Repositories;
 using ProductIdentification.Infrastructure;
 
 namespace ProductIdentification.Web.Controllers
 {
+    [Authorize]
     public class AjaxSubCategoryController : Controller
     {
         private readonly ICategoryService _categoryService;
