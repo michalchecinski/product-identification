@@ -81,7 +81,14 @@ namespace ProductIdentification.Web
             services.AddScoped<IQueueService, QueueService>();
             services.AddScoped<IReviewProductPhotosService, ReviewProductPhotosService>();
 
-            services.AddScoped<IEmailSender, EmailSender>();
+            if (IsLocalhost())
+            {
+                services.AddScoped<IEmailSender, LocalhostEmailSender>();
+            }
+            else
+            {
+                services.AddScoped<IEmailSender, EmailSender>();
+            }
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -116,6 +123,12 @@ namespace ProductIdentification.Web
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        private static bool IsLocalhost()
+        {
+            bool.TryParse(Environment.GetEnvironmentVariable("IsLocalhost"), out var value);
+            return value;
         }
     }
 }

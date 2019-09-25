@@ -33,15 +33,8 @@ namespace ProductIdentification.Functions
 
             services.AddScoped<IProductIdentifyService, ProductIdentifyService>();
             services.AddScoped<IQueueService, QueueService>();
+            services.AddScoped<IEmailService, EmailService>();
             
-            if (IsLocalhost())
-            {
-                services.AddScoped<IEmailService, LocalhostEmailService>();
-            }
-            else
-            {
-                services.AddScoped<IEmailService, EmailService>();
-            }
         }
 
         private static AppSettings ConfigureAppSettings()
@@ -61,12 +54,6 @@ namespace ProductIdentification.Functions
                 EmailPassword = Environment.GetEnvironmentVariable(nameof(AppSettings.EmailPassword)),
             };
             return config;
-        }
-        
-        private static bool IsLocalhost()
-        {
-            bool.TryParse(Environment.GetEnvironmentVariable("IsLocalhost"), out var value);
-            return value;
         }
     }
 }

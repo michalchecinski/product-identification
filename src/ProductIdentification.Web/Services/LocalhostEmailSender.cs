@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity.UI.Services;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace ProductIdentification.Infrastructure
 {
-    public class LocalhostEmailService : IEmailService
+    public class LocalhostEmailSender : IEmailSender
     {
         public async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
