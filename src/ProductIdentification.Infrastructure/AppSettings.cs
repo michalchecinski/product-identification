@@ -16,6 +16,7 @@ namespace ProductIdentification.Infrastructure
         public string Storage { get; set; }
         public string EmailFrom { get; set; }
         public string EmailPassword { get; set; }
-        public string EmailSmtpHostPassword { get; set; }
+        public string EmailSmtpHost { get; set; }
+        public int EmailSmtpPort { get; set; }
     }
 }

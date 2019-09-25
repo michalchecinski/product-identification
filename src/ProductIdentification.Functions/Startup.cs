@@ -52,6 +52,8 @@ namespace ProductIdentification.Functions
                 Storage = Environment.GetEnvironmentVariable(nameof(AppSettings.Storage)),
                 EmailFrom = Environment.GetEnvironmentVariable(nameof(AppSettings.EmailFrom)),
                 EmailPassword = Environment.GetEnvironmentVariable(nameof(AppSettings.EmailPassword)),
+                EmailSmtpHost = Environment.GetEnvironmentVariable(nameof(AppSettings.EmailSmtpHost)),
+                EmailSmtpPort = int.Parse(Environment.GetEnvironmentVariable(nameof(AppSettings.EmailSmtpPort))),
             };
             return config;
         }
