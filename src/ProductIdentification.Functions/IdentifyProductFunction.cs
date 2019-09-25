@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -51,6 +52,8 @@ namespace ProductIdentification.Functions
             _fileRepository.SaveFileAsync(product.StoragePathToVerify(), Guid.NewGuid() + ".jpg", stream)
                            .RunAndForget();
 
+            var productOriginalPhotos = await _fileRepository.FilesList(product.StoragePathOriginal());
+
             log.LogInformation("Returning result.");
             var result = new
             {
@@ -59,7 +62,8 @@ namespace ProductIdentification.Functions
                 product.GrossPrice,
                 product.NetPrice,
                 CategoryName = product.Category.Name,
-                SubCategoryName = product.SubCategory.Name
+                SubCategoryName = product.SubCategory.Name,
+                Photo = productOriginalPhotos.FirstOrDefault()?.Path
             };
 
             return new JsonResult(JsonConvert.SerializeObject(result));
