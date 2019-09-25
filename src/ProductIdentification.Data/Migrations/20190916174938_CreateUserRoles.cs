@@ -10,26 +10,37 @@ namespace ProductIdentification.Data.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            CreateRole(migrationBuilder, Role.Admin);
-            CreateRole(migrationBuilder, Role.Manager);
-            CreateRole(migrationBuilder, Role.DataManager);
-            CreateRole(migrationBuilder, Role.WarehouseMan);
+            var rolesSql = string.Empty;
+            rolesSql += CreateRole(Role.Admin);
+            rolesSql += CreateRole(Role.Manager);
+            rolesSql += CreateRole(Role.DataManager);
+            rolesSql += CreateRole(Role.WarehouseMan);
+
+            migrationBuilder.Sql(rolesSql);
         }
 
-        private static void CreateRole(MigrationBuilder migrationBuilder, string roleName)
+        private static string CreateRole(string roleName)
         {
             var role = new IdentityRole(roleName);
-            migrationBuilder.InsertData("AspNetRoles",
-                new[]
-                {
-                    nameof(IdentityRole.Id), nameof(IdentityRole.Name), nameof(IdentityRole.NormalizedName),
-                    nameof(IdentityRole.ConcurrencyStamp)
-                },
-                new object[] {role.Id, role.Name, role.Name.Normalize(), role.ConcurrencyStamp});
+            return $@"INSERT INTO [dbo].[AspNetRoles]
+            (Name, NormalizedName, ConcurrencyStamp)
+            VALUES( {roleName}, {roleName.Normalize()}, {role.ConcurrencyStamp});";
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            var rolesSql = string.Empty;
+            rolesSql += DeleteRole(Role.Admin);
+            rolesSql += DeleteRole(Role.Manager);
+            rolesSql += DeleteRole(Role.DataManager);
+            rolesSql += DeleteRole(Role.WarehouseMan);
+
+            migrationBuilder.Sql(rolesSql);
+        }
+        
+        private static string DeleteRole(string roleName)
+        {
+            return $@"DELETE FROM [dbo].[AspNetRoles] WHERE Name= {roleName};";
         }
     }
 }
