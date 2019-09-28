@@ -2,7 +2,6 @@
 
 $regexA = '(CREATE PROCEDURE(.*?\s?)(?=END;))'
 $regexB = '(ALTER PROCEDURE(.*?\s?)(?=END;))'
-$regexGuid = ', (\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}'
 $encoding = New-Object System.Text.UTF8Encoding
 
 
@@ -16,10 +15,6 @@ Get-ChildItem $file | % {
 }
 Get-ChildItem $file | % {
   $c = (Get-Content $_.FullName) -replace $regexB, 'EXEC(''$0'')'
-  [IO.File]::WriteAllText("$((Get-Item -Path ".\").FullName)\\" + $file, $c, $encoding)
-}
-Get-ChildItem $file | % {
-  $c = (Get-Content $_.FullName) -replace $regexGuid, ', ''$0'''
   [IO.File]::WriteAllText("$((Get-Item -Path ".\").FullName)\\" + $file, $c, $encoding)
 }
 Get-ChildItem $file | % {
