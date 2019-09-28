@@ -24,7 +24,7 @@ namespace ProductIdentification.Data.Migrations
             var role = new IdentityRole(roleName);
             return $@"INSERT INTO [dbo].[AspNetRoles]
             (Id, Name, NormalizedName, ConcurrencyStamp)
-            VALUES( '{Guid.NewGuid()}' '{roleName}', '{roleName.Normalize()}', '{role.ConcurrencyStamp}');";
+            VALUES( '{Guid.NewGuid()}', '{roleName}', '{roleName.Normalize()}', '{role.ConcurrencyStamp}');";
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
