@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using ProductIdentification.Common;
 using ProductIdentification.Core.DomainModels;
 using ProductIdentification.Core.Repositories;
 using ProductIdentification.Infrastructure;
@@ -96,9 +97,8 @@ namespace ProductIdentification.Web.Controllers
 
         public async Task<ActionResult> Details(int id)
         {
-            var product = await _productRepository.Get(id);
-            var model = _mapper.Map<ProductViewModel>(product);
-            return View(model);
+            var product = await _productService.Get(id);
+            return View(product);
         }
 
         // POST: Product/Create

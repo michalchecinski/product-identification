@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using ProductIdentification.Core.DomainModels;
+using ProductIdentification.Core.Dto;
 
 namespace ProductIdentification.Infrastructure
 {
