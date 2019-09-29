@@ -8,15 +8,6 @@ namespace ProductIdentification.Infrastructure
 {
     public class AppSettings
     {
-        public string CustomVisionTrainingKey { get; set; }
-        public string CustomVisionPredictionKey { get; set; }
-        public string CustomVisionProjectId { get; set; }
-        public string CustomVisionPredictionId { get; set; }
-        public string CustomVisionEndpoint { get; set; }
-        public string Storage { get; set; }
-        public string EmailFrom { get; set; }
-        public string EmailPassword { get; set; }
-        public string EmailSmtpHost { get; set; }
-        public int EmailSmtpPort { get; set; }
+        public string KeyVaultUri { get; set; }
     }
 }

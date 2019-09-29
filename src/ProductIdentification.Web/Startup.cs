@@ -24,7 +24,9 @@ namespace ProductIdentification.Web
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        private readonly IServiceProvider _serviceProvider;
+        
+        public Startup(IHostingEnvironment env, IServiceProvider serviceProvider)
         {
             var builder = new ConfigurationBuilder()
                           .SetBasePath(env.ContentRootPath)
@@ -36,6 +38,8 @@ namespace ProductIdentification.Web
                           .AddEnvironmentVariables();
 
             Configuration = builder.Build();
+            
+            _serviceProvider = serviceProvider;
         }
 
         public IConfiguration Configuration { get; }
@@ -72,7 +76,10 @@ namespace ProductIdentification.Web
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddScoped<IFileRepository>(s => new AzureFileRepository(config.Storage));
+            
+            var secretsFetcher = _serviceProvider.GetService<ISecretsFetcher>();
+            
+            services.AddScoped<IFileRepository>(s => new AzureFileRepository(secretsFetcher.GetStorageConnectionString));
 
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<ISubCategoryService, SubCategoryService>();
@@ -80,6 +87,8 @@ namespace ProductIdentification.Web
             services.AddScoped<IProductIdentifyService, ProductIdentifyService>();
             services.AddScoped<IQueueService, QueueService>();
             services.AddScoped<IReviewProductPhotosService, ReviewProductPhotosService>();
+
+            services.AddScoped<ISecretsFetcher, KeyVaultSecretsFetcher>();
 
             if (IsLocalhost())
             {

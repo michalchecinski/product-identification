@@ -11,9 +11,9 @@ namespace ProductIdentification.Infrastructure
     {
         private readonly CloudQueueClient _queueClient;
 
-        public QueueService(AppSettings settings)
+        public QueueService(ISecretsFetcher secretsFetcher)
         {
-            var storageAccount = CloudStorageAccount.Parse(settings.Storage);
+            var storageAccount = CloudStorageAccount.Parse(secretsFetcher.GetStorageConnectionString);
             _queueClient = storageAccount.CreateCloudQueueClient();
         }
         
