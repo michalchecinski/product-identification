@@ -136,7 +136,8 @@
     "functionStorageAccountName": "[tolower(take(concat('stor', replace(string.delNumbers(parameters('functionAppName')),'-','')),24))]",
     "storageAccountid": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('functionStorageAccountName'))]",
     "CustomVisionPredictionId": "[concat(resourcegroup().id ,'/providers/Microsoft.CognitiveServices/accounts/', parameters('namePrediction'))]",
-    "tenantId": "[subscription().tenantId]"
+    "tenantId": "[subscription().tenantId]",
+    "keyVaultUrl": "[concat('https://', parameters('keyVaultName') ,'.vault.azure.net/')]"
   },
   "functions": [
     {
@@ -231,6 +232,10 @@
           {
             "name": "IsLocalhost",
             "value": false
+          },
+          {
+            "name": "KeyVaultUri",
+            "value": "[variables('keyVaultUrl')]"
           }
         ]
       },
@@ -374,6 +379,10 @@
             {
               "name": "IsLocalhost",
               "value": false
+            },
+            {
+              "name": "KeyVaultUri",
+              "value": "[variables('keyVaultUrl')]"
             }
           ]
         }
