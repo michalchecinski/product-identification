@@ -12,6 +12,7 @@ using Microsoft.Azure.Documents.SystemFunctions;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using ProductIdentification.Common;
+using ProductIdentification.Core.Dto;
 using ProductIdentification.Core.Repositories;
 using ProductIdentification.Infrastructure;
 
@@ -52,21 +53,16 @@ namespace ProductIdentification.Functions
             _fileRepository.SaveFileAsync(product.StoragePathToVerify(), Guid.NewGuid() + ".jpg", stream)
                            .RunAndForget();
 
+            log.LogInformation("Returning result.");
+            
             var productOriginalPhotos = await _fileRepository.FilesList(product.StoragePathOriginal());
 
-            log.LogInformation("Returning result.");
-            var result = new
+            var productDto = new ProductDto(product)
             {
-                product.Id,
-                product.Name,
-                product.GrossPrice,
-                product.NetPrice,
-                CategoryName = product.Category.Name,
-                SubCategoryName = product.SubCategory.Name,
                 Photo = productOriginalPhotos.FirstOrDefault()?.Path
             };
 
-            return new JsonResult(JsonConvert.SerializeObject(result));
+            return new JsonResult(JsonConvert.SerializeObject(productDto));
         }
     }
 }

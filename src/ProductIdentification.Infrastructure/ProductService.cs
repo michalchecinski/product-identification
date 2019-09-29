@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using ProductIdentification.Common;
 using ProductIdentification.Core.DomainModels;
+using ProductIdentification.Core.Dto;
 using ProductIdentification.Core.Models.Messages;
 using ProductIdentification.Core.Repositories;
 
@@ -163,6 +164,18 @@ namespace ProductIdentification.Infrastructure
             product.SubCategoryId = subCategory.Id;
 
             return await UpdateProduct(product);
+        }
+
+        public async Task<ProductDto> Get(int id)
+        {
+            var product = await _productRepository.Get(id);
+            
+            var productOriginalPhotos = await _fileRepository.FilesList(product.StoragePathOriginal());
+            
+            return new ProductDto(product)
+            {
+                Photo = productOriginalPhotos.FirstOrDefault()?.Path
+            };
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using ProductIdentification.Core.DomainModels;
+using ProductIdentification.Core.Dto;
 
 namespace ProductIdentification.Infrastructure
 {
@@ -20,5 +21,6 @@ namespace ProductIdentification.Infrastructure
             List<IFormFile> images);
 
         Task<Product> UpdateProduct(Product product, string categoryName, string subCategoryName);
+        Task<ProductDto> Get(int id);
     }
 }

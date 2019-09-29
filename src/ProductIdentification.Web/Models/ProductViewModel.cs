@@ -28,5 +28,7 @@ namespace ProductIdentification.Web.Models
         [DisplayName("Subcategory Name")]
         [Required(ErrorMessage = "Required")]
         public string SubCategoryName { get; set; }
+
+        public string Photo { get; set; }
     }
 }

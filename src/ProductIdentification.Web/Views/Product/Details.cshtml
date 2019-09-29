@@ -1,49 +1,56 @@
 ﻿@using ProductIdentification.Core.Models.Roles
-@model ProductIdentification.Web.Models.ProductViewModel
+@model ProductIdentification.Core.Dto.ProductDto
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h2> @Model.CategoryName / @Model.SubCategoryName / @Model.Name</h2>
+<h2> @Model.Category / @Model.SubCategory / @Model.Name</h2>
 
 <h1>Details</h1>
 
 <div>
     <h4>Product: @Model.Name</h4>
     <hr/>
-    <dl class="row">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.NetPrice)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.NetPrice)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.GrossPrice)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.GrossPrice)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CategoryName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CategoryName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.SubCategoryName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.SubCategoryName)
-        </dd>
-    </dl>
+    <div class="row">
+        <div class="col-6">
+            <dl class="row">
+                <dt class="col-sm-2">
+                    Product Name
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Name)
+                </dd>
+                <dt class="col-sm-2">
+                    Net Price
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.NetPrice)
+                </dd>
+                <dt class="col-sm-2">
+                    Gross Price
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.GrossPrice)
+                </dd>
+                <dt class="col-sm-2">
+                    Category
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Category)
+                </dd>
+                <dt class="col-sm-2">
+                    SubCategory
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.SubCategory)
+                </dd>
+            </dl>
+        </div>
+        <div class="col-6">
+            <img src="@Model.Photo" className="img" alt="Photo of @Model.Name"/>
+        </div>
+    </div>
 </div>
 
 @if (User.IsInRole(Role.Admin) || User.IsInRole(Role.WarehouseMan))
