@@ -441,7 +441,7 @@
       "dependsOn": []
     },
     {
-      "name": "[variables('keyVaultName')]",
+      "name": "[parameters('keyVaultName')]",
       "type": "Microsoft.KeyVault/vaults",
       "apiVersion": "2016-10-01",
       "location": "[resourceGroup().location]",
