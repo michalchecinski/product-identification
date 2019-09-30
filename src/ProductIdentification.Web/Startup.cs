@@ -68,11 +68,12 @@ namespace ProductIdentification.Web
             services.AddDefaultIdentity<IdentityUser>()
                     .AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<ProductIdentificationContext>();
+            
+            services.AddScoped<AzureStorageAccountFactory>();
 
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
-
             services.AddScoped<IFileRepository, AzureFileRepository>();
 
             services.AddScoped<ICategoryService, CategoryService>();
