@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using ProductIdentification.Core.Models;
 using ProductIdentification.Core.Repositories;
 using ProductIdentification.Data;
 using ProductIdentification.Data.Repositories;
@@ -14,13 +15,6 @@ namespace ProductIdentification.Functions
 {
     public class Startup : FunctionsStartup
     {
-        private readonly IServiceProvider _serviceProvider;
-
-        public Startup(IServiceProvider serviceProvider)
-        {
-            _serviceProvider = serviceProvider;
-        }
-        
         public override void Configure(IFunctionsHostBuilder builder)
         {
             var services = builder.Services;
@@ -33,11 +27,11 @@ namespace ProductIdentification.Functions
             
             var config = ConfigureAppSettings();
             services.AddSingleton(config);
-            
-            var secretsFetcher = _serviceProvider.GetService<ISecretsFetcher>();
 
+            services.AddScoped<AzureStorageAccountFactory>();
+            
             services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddScoped<IProductTrainingRepository>(s => new ProductTrainingRepository(secretsFetcher.GetStorageConnectionString));
+            services.AddScoped<IProductTrainingRepository, ProductTrainingRepository>();
             services.AddScoped<IFileRepository, AzureFileRepository>();
 
             services.AddScoped<IProductIdentifyService, ProductIdentifyService>();
