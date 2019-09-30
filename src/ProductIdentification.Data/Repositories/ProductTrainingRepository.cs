@@ -13,9 +13,9 @@ namespace ProductIdentification.Data.Repositories
         private readonly CloudTable _table;
         private const string TableName = "ProductTrain";
 
-        public ProductTrainingRepository(string connectionString)
+        public ProductTrainingRepository(AzureStorageAccountFactory storageAccountFactory)
         {
-            var storageAccount = CloudStorageAccount.Parse(connectionString);
+            var storageAccount = storageAccountFactory.GetTableStorageAccount();
             var tableClient = storageAccount.CreateCloudTableClient();
             _table = tableClient.GetTableReference(TableName);
             _table.CreateIfNotExistsAsync();
