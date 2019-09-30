@@ -25,14 +25,14 @@ namespace ProductIdentification.Infrastructure
         private readonly string _endpointUrl;
         private const string PublishedModelName = "ProductIdentification";
 
-        public ProductIdentifyService(IProductRepository productRepository, AppSettings settings)
+        public ProductIdentifyService(IProductRepository productRepository, ISecretsFetcher secretsFetcher)
         {
             _productRepository = productRepository;
-            _predictionKey = settings.CustomVisionPredictionKey;
-            _trainingKey = settings.CustomVisionTrainingKey;
-            _projectId = new Guid(settings.CustomVisionProjectId);
-            _predictionId = settings.CustomVisionPredictionId;
-            _endpointUrl = settings.CustomVisionEndpoint;
+            _predictionKey = secretsFetcher.GetCustomVisionPredictionKey;
+            _trainingKey = secretsFetcher.GetCustomVisionTrainingKey;
+            _projectId = new Guid(secretsFetcher.GetCustomVisionProjectId);
+            _predictionId = secretsFetcher.GetCustomVisionPredictionId;
+            _endpointUrl = secretsFetcher.GetCustomVisionEndpoint;
         }
 
         public async Task<Product> IdentifyProduct(Stream image)

@@ -26,7 +26,7 @@
         }
         
         [FunctionName(nameof(PublishModel))]
-        public async Task PublishModel([QueueTrigger(QueueNames.PublishModel, Connection = "Storage")]PublishModelMessage message,
+        public async Task PublishModel([QueueTrigger(QueueNames.PublishModel, Connection = "StorageProdIden")]PublishModelMessage message,
                                        ILogger log)
         {
             log.LogInformation("PublishModel function called");

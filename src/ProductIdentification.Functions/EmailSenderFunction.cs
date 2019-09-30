@@ -17,7 +17,7 @@ namespace ProductIdentification.Functions
         }
         
         [FunctionName(nameof(EmailSender))]
-        public void EmailSender([QueueTrigger(QueueNames.SendEmail, Connection = "Storage")]
+        public void EmailSender([QueueTrigger(QueueNames.SendEmail, Connection = "StorageProdIden")]
                                SendEmailMessage emailMessage, ILogger log)
         {
             log.LogInformation($"Sending email to: {emailMessage.Email} {emailMessage.Title}");

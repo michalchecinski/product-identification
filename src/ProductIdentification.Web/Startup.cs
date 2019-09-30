@@ -72,7 +72,8 @@ namespace ProductIdentification.Web
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddScoped<IFileRepository>(s => new AzureFileRepository(config.Storage));
+
+            services.AddScoped<IFileRepository, AzureFileRepository>();
 
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<ISubCategoryService, SubCategoryService>();
@@ -80,6 +81,8 @@ namespace ProductIdentification.Web
             services.AddScoped<IProductIdentifyService, ProductIdentifyService>();
             services.AddScoped<IQueueService, QueueService>();
             services.AddScoped<IReviewProductPhotosService, ReviewProductPhotosService>();
+
+            services.AddScoped<ISecretsFetcher, KeyVaultSecretsFetcher>();
 
             if (IsLocalhost())
             {

@@ -6,23 +6,17 @@ namespace ProductIdentification.Infrastructure
 {
     public class EmailService : IEmailService
     {
-        private readonly string _fromEmail;
-        private readonly string _emailPassword;
-        private readonly string _smtpHost;
-        private int _smtpPort;
+        private readonly ISecretsFetcher _secretsFetcher;
 
-        public EmailService(AppSettings settings)
+        public EmailService(ISecretsFetcher secretsFetcher)
         {
-            _fromEmail = settings.EmailFrom;
-            _emailPassword = settings.EmailPassword;
-            _smtpHost = settings.EmailSmtpHost;
-            _smtpPort = settings.EmailSmtpPort;
+            _secretsFetcher = secretsFetcher;
         }
 
         public async Task SendEmailAsync(string email, string title, string htmlMessage)
         {
             MailMessage message = new MailMessage();
-            message.From = new MailAddress(_fromEmail);
+            message.From = new MailAddress(_secretsFetcher.GetEmailFrom);
             message.To.Add(new MailAddress(email));
             message.Subject = title;
             message.IsBodyHtml = true;
@@ -35,11 +29,11 @@ namespace ProductIdentification.Infrastructure
         private SmtpClient GetSmtpClient()
         {
             SmtpClient smtp = new SmtpClient();
-            smtp.Port = _smtpPort;
-            smtp.Host = _smtpHost;
+            smtp.Port = _secretsFetcher.GetEmailSmtpPort;
+            smtp.Host = _secretsFetcher.GetEmailSmtpHost;
             smtp.EnableSsl = true;
             smtp.UseDefaultCredentials = false;
-            smtp.Credentials = new NetworkCredential(_fromEmail, _emailPassword);
+            smtp.Credentials = new NetworkCredential(_secretsFetcher.GetEmailUsername, _secretsFetcher.GetEmailPassword);
             smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
             return smtp;
         }

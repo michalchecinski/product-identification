@@ -14,6 +14,13 @@ namespace ProductIdentification.Functions
 {
     public class Startup : FunctionsStartup
     {
+        private readonly IServiceProvider _serviceProvider;
+
+        public Startup(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+        }
+        
         public override void Configure(IFunctionsHostBuilder builder)
         {
             var services = builder.Services;
@@ -26,34 +33,25 @@ namespace ProductIdentification.Functions
             
             var config = ConfigureAppSettings();
             services.AddSingleton(config);
+            
+            var secretsFetcher = _serviceProvider.GetService<ISecretsFetcher>();
 
             services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddScoped<IProductTrainingRepository>(s => new ProductTrainingRepository(config.Storage));
-            services.AddScoped<IFileRepository>(s => new AzureFileRepository(config.Storage));
+            services.AddScoped<IProductTrainingRepository>(s => new ProductTrainingRepository(secretsFetcher.GetStorageConnectionString));
+            services.AddScoped<IFileRepository, AzureFileRepository>();
 
             services.AddScoped<IProductIdentifyService, ProductIdentifyService>();
             services.AddScoped<IQueueService, QueueService>();
             services.AddScoped<IEmailService, EmailService>();
             
+            services.AddScoped<ISecretsFetcher, KeyVaultSecretsFetcher>();
         }
 
         private static AppSettings ConfigureAppSettings()
         {
             var config = new AppSettings
             {
-                CustomVisionEndpoint = Environment.GetEnvironmentVariable(nameof(AppSettings.CustomVisionEndpoint)),
-                CustomVisionPredictionId =
-                    Environment.GetEnvironmentVariable(nameof(AppSettings.CustomVisionPredictionId)),
-                CustomVisionPredictionKey =
-                    Environment.GetEnvironmentVariable(nameof(AppSettings.CustomVisionPredictionKey)),
-                CustomVisionProjectId = Environment.GetEnvironmentVariable(nameof(AppSettings.CustomVisionProjectId)),
-                CustomVisionTrainingKey =
-                    Environment.GetEnvironmentVariable(nameof(AppSettings.CustomVisionTrainingKey)),
-                Storage = Environment.GetEnvironmentVariable(nameof(AppSettings.Storage)),
-                EmailFrom = Environment.GetEnvironmentVariable(nameof(AppSettings.EmailFrom)),
-                EmailPassword = Environment.GetEnvironmentVariable(nameof(AppSettings.EmailPassword)),
-                EmailSmtpHost = Environment.GetEnvironmentVariable(nameof(AppSettings.EmailSmtpHost)),
-                EmailSmtpPort = int.Parse(Environment.GetEnvironmentVariable(nameof(AppSettings.EmailSmtpPort))),
+                KeyVaultUri = Environment.GetEnvironmentVariable(nameof(AppSettings.KeyVaultUri))
             };
             return config;
         }

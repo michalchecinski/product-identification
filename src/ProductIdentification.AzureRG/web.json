@@ -119,6 +119,15 @@
       "type": "string",
       "defaultValue": "Standard_LRS",
       "allowedValues": ["Standard_LRS", "Standard_GRS", "Standard_RAGRS"]
+    },
+    "keyVaultName": {"type": "string"},
+    "keyVaultSkuName": {
+      "type": "string",
+      "defaultValue": "Standard",
+      "allowedValues": [
+        "Standard",
+        "Premium"
+      ]
     }
   },
   "variables": {
@@ -126,7 +135,9 @@
     "functionApplicationInsightsName": "[concat('insights-', parameters('functionAppName'))]",
     "functionStorageAccountName": "[tolower(take(concat('stor', replace(string.delNumbers(parameters('functionAppName')),'-','')),24))]",
     "storageAccountid": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('functionStorageAccountName'))]",
-    "CustomVisionPredictionId": "[concat(resourcegroup().id ,'/providers/Microsoft.CognitiveServices/accounts/', parameters('namePrediction'))]"
+    "CustomVisionPredictionId": "[concat(resourcegroup().id ,'/providers/Microsoft.CognitiveServices/accounts/', parameters('namePrediction'))]",
+    "tenantId": "[subscription().tenantId]",
+    "keyVaultUrl": "[concat('https://', parameters('keyVaultName') ,'.vault.azure.net/')]"
   },
   "functions": [
     {
@@ -178,6 +189,9 @@
       "apiVersion": "2016-08-01",
       "location": "[resourceGroup().location]",
       "scale": null,
+      "identity": {
+        "type": "SystemAssigned"
+      },
       "properties": {
         "enabled": true,
         "hostNameSslStates": [
@@ -216,41 +230,18 @@
         },
         "appSettings": [
           {
-            "name": "AppSettings:CustomVisionPredictionKey",
-            "value": "[listKeys(parameters('namePrediction'),'2016-02-01-preview').key1]"
-          },
-          {
-            "name": "AppSettings:CustomVisionPredictionId",
-            "value": "[variables('CustomVisionPredictionId')]"
-          },
-          {
-            "name": "AppSettings:CustomVisionProjectId",
-            "value": "[parameters('CustomVisionProjectId')]"
-          },
-          {
-            "name": "AppSettings:CustomVisionTrainingKey",
-            "value": "[listKeys(parameters('nameTraining'),'2016-02-01-preview').key1]"
-          },
-          {
-            "name": "AppSettings:CustomVisionEndpoint",
-            "value": "[reference(parameters('namePrediction'),'2016-02-01-preview').endpoint]"
-          },
-          {
-            "name": "AppSettings:Storage",
-            "value": "[Concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2018-07-01').keys[0].value)]"
-          },
-          {
             "name": "IsLocalhost",
             "value": false
+          },
+          {
+            "name": "KeyVaultUri",
+            "value": "[variables('keyVaultUrl')]"
           }
         ]
       },
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', parameters('webHostingPlanName'))]",
-        "[resourceId('Microsoft.Sql/servers/databases', parameters('sqlserverName'), parameters('databaseName'))]",
-        "[resourceId('Microsoft.CognitiveServices/accounts', parameters('namePrediction'))]",
-        "[resourceId('Microsoft.CognitiveServices/accounts', parameters('nameTraining'))]",
-        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+        "[resourceId('Microsoft.Sql/servers/databases', parameters('sqlserverName'), parameters('databaseName'))]"
       ]
     },
     {
@@ -337,28 +328,21 @@
       "name": "[parameters('functionAppName')]",
       "location": "[resourceGroup().location]",
       "kind": "functionapp",
+      "identity": {
+        "type": "SystemAssigned"
+      },
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', variables('functionsHostingPlanName'))]",
         "[resourceId('Microsoft.Storage/storageAccounts', variables('functionStorageAccountName'))]",
-        "[resourceId('Microsoft.Sql/servers/databases', parameters('sqlserverName'), parameters('databaseName'))]",
-        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+        "[resourceId('Microsoft.Sql/servers/databases', parameters('sqlserverName'), parameters('databaseName'))]"
       ],
       "properties": {
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('functionsHostingPlanName'))]",
         "siteConfig": {
           "appSettings": [
             {
-              "name": "AzureWebJobsDashboard",
-              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('functionStorageAccountName'), ';AccountKey=', listKeys(variables('storageAccountid'),'2015-05-01-preview').key1)]"
-            },
-            // Due to queueTrigger issue needs to use same storage: https://github.com/Azure/azure-functions-host/issues/4904
-            //{
-            //  "name": "AzureWebJobsStorage",
-            //  "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('functionStorageAccountName'), ';AccountKey=', listKeys(variables('storageAccountid'),'2015-05-01-preview').key1)]"
-            //},
-            {
               "name": "AzureWebJobsStorage",
-              "value": "[Concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2018-07-01').keys[0].value)]"
+              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('functionStorageAccountName'), ';AccountKey=', listKeys(variables('storageAccountid'),'2015-05-01-preview').key1)]"
             },
             {
               "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
@@ -389,32 +373,12 @@
               "value": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('sqlserverName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('databaseName'), ';User Id=', parameters('sqlAdministratorLogin'), '@', reference(concat('Microsoft.Sql/servers/', parameters('sqlserverName'))).fullyQualifiedDomainName, ';Password=', parameters('sqlAdministratorLoginPassword'), ';', 'MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;ConnectRetryCount=10;')]"
             },
             {
-              "name": "CustomVisionPredictionKey",
-              "value": "[listKeys(parameters('namePrediction'),'2016-02-01-preview').key1]"
-            },
-            {
-              "name": "CustomVisionPredictionId",
-              "value": "[variables('CustomVisionPredictionId')]"
-            },
-            {
-              "name": "CustomVisionProjectId",
-              "value": "[parameters('CustomVisionProjectId')]"
-            },
-            {
-              "name": "CustomVisionTrainingKey",
-              "value": "[listKeys(parameters('nameTraining'),'2016-02-01-preview').key1]"
-            },
-            {
-              "name": "CustomVisionEndpoint",
-              "value": "[reference(parameters('namePrediction'),'2016-02-01-preview').endpoint]"
-            },
-            {
-              "name": "Storage",
-              "value": "[Concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2018-07-01').keys[0].value)]"
-            },
-            {
               "name": "IsLocalhost",
               "value": false
+            },
+            {
+              "name": "KeyVaultUri",
+              "value": "[variables('keyVaultUrl')]"
             }
           ]
         }
@@ -471,6 +435,156 @@
       },
       "resources": [],
       "dependsOn": []
+    },
+    {
+      "name": "[parameters('keyVaultName')]",
+      "type": "Microsoft.KeyVault/vaults",
+      "apiVersion": "2016-10-01",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "accessPolicies": [
+          {
+            "tenantId": "[variables('tenantId')]",
+            "objectId": "[reference(resourceId('Microsoft.Web/sites/', parameters('functionAppName')), '2018-02-01', 'Full').identity.principalId]",
+            "permissions": {
+              "keys": [
+                "get",
+                "list"
+              ],
+              "secrets": [
+                "get",
+                "list"
+              ],
+              "certificates": [
+                "get",
+                "list"
+              ]
+            },
+            "dependsOn": [
+              "[resourceId('Microsoft.Web/sites/', parameters('functionAppName'))]"
+            ]
+          },
+          {
+            "tenantId": "[variables('tenantId')]",
+            "objectId": "[reference(resourceId('Microsoft.Web/sites/', parameters('webSiteName')), '2018-02-01', 'Full').identity.principalId]",
+            "permissions": {
+              "keys": [
+                "get",
+                "list"
+              ],
+              "secrets": [
+                "get",
+                "list"
+              ],
+              "certificates": [
+                "get",
+                "list"
+              ]
+            },
+            "dependsOn": [
+              "[resourceId('Microsoft.Web/sites/', parameters('webSiteName'))]"
+            ]
+          }
+        ],
+        "tenantId": "[variables('tenantId')]",
+        "sku": {
+          "family": "A",
+          "name": "[parameters('keyVaultSkuName')]"
+        },
+        "enabledForDeployment": true,
+        "enabledForDiskEncryption": true,
+        "enabledForTemplateDeployment": true,
+        "createMode": "default"
+      }
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "name": "[concat(parameters('keyVaultName'), '/', 'StorageConnectionString')]",
+      "apiVersion": "2018-02-14",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+      ],
+      "properties": {
+        "value": "[Concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2018-07-01').keys[0].value)]"
+      }
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "name": "[concat(parameters('keyVaultName'), '/', 'DatabaseConnectionString')]",
+      "apiVersion": "2018-02-14",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]",
+        "[resourceId('Microsoft.Sql/servers/databases', parameters('sqlserverName'), parameters('databaseName'))]"
+      ],
+      "properties": {
+        "value": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('sqlserverName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('databaseName'), ';User Id=', parameters('sqlAdministratorLogin'), '@', reference(concat('Microsoft.Sql/servers/', parameters('sqlserverName'))).fullyQualifiedDomainName, ';Password=', parameters('sqlAdministratorLoginPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;ConnectRetryCount=10;')]"
+      }
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "name": "[concat(parameters('keyVaultName'), '/', 'CustomVisionPredictionKey')]",
+      "apiVersion": "2018-02-14",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]",
+        "[resourceId('Microsoft.CognitiveServices/accounts', parameters('namePrediction'))]"
+      ],
+      "properties": {
+        "value": "[listKeys(parameters('namePrediction'),'2016-02-01-preview').key1]"
+      }
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "name": "[concat(parameters('keyVaultName'), '/', 'CustomVisionPredictionId')]",
+      "apiVersion": "2018-02-14",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+      ],
+      "properties": {
+        "value": "[variables('CustomVisionPredictionId')]"
+      }
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "name": "[concat(parameters('keyVaultName'), '/', 'CustomVisionProjectId')]",
+      "apiVersion": "2018-02-14",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+      ],
+      "properties": {
+        "value": "[parameters('CustomVisionProjectId')]"
+      }
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "name": "[concat(parameters('keyVaultName'), '/', 'CustomVisionTrainingKey')]",
+      "apiVersion": "2018-02-14",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]",
+        "[resourceId('Microsoft.CognitiveServices/accounts', parameters('nameTraining'))]"
+      ],
+      "properties": {
+        "value": "[listKeys(parameters('nameTraining'),'2016-02-01-preview').key1]"
+      }
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "name": "[concat(parameters('keyVaultName'), '/', 'CustomVisionEndpoint')]",
+      "apiVersion": "2018-02-14",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]",
+        "[resourceId('Microsoft.CognitiveServices/accounts', parameters('namePrediction'))]"
+      ],
+      "properties": {
+        "value": "[reference(parameters('namePrediction'),'2016-02-01-preview').endpoint]"
+      }
     }
   ]
 }

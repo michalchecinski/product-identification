@@ -32,7 +32,7 @@ namespace ProductIdentification.Functions
         }
 
         [FunctionName(nameof(AddProductToIdentifyService))]
-        public async Task AddProductToIdentifyService([QueueTrigger(QueueNames.AddProduct, Connection = "Storage")]
+        public async Task AddProductToIdentifyService([QueueTrigger(QueueNames.AddProduct, Connection = "StorageProdIden")]
                                                 AddProductMessage message, ILogger log)
         {
             log.LogInformation("AddProductToIdentifyService function called");
@@ -66,7 +66,7 @@ namespace ProductIdentification.Functions
         }
         
         [FunctionName(nameof(UpdateProductInIdentifyService))]
-        public async Task UpdateProductInIdentifyService([QueueTrigger(QueueNames.UpdateProduct, Connection = "Storage")]
+        public async Task UpdateProductInIdentifyService([QueueTrigger(QueueNames.UpdateProduct, Connection = "StorageProdIden")]
                                                       UpdateProductMessage message, ILogger log)
         {
             var product = await _productRepository.Get(message.ProductId);
