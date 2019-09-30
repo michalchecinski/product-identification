@@ -6,20 +6,20 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Azure.Storage;
 using Microsoft.Azure.Storage.Blob;
-using ProductIdentification.Core.Repositories;
 using Microsoft.Azure.Storage.DataMovement;
 using ProductIdentification.Common;
 using ProductIdentification.Core.Models;
+using ProductIdentification.Core.Repositories;
 
-namespace ProductIdentification.Data.Repositories
+namespace ProductIdentification.Infrastructure
 {
     public class AzureFileRepository : IFileRepository
     {
         private readonly CloudBlobClient _blobClient;
 
-        public AzureFileRepository(string connectionString)
+        public AzureFileRepository(ISecretsFetcher secretsFetcher)
         {
-            var storageAccount = CloudStorageAccount.Parse(connectionString);
+            var storageAccount = CloudStorageAccount.Parse(secretsFetcher.GetStorageConnectionString);
             _blobClient = storageAccount.CreateCloudBlobClient();
         }
 

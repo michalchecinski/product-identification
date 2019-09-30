@@ -24,9 +24,7 @@ namespace ProductIdentification.Web
 {
     public class Startup
     {
-        private readonly IServiceProvider _serviceProvider;
-        
-        public Startup(IHostingEnvironment env, IServiceProvider serviceProvider)
+        public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
                           .SetBasePath(env.ContentRootPath)
@@ -38,8 +36,6 @@ namespace ProductIdentification.Web
                           .AddEnvironmentVariables();
 
             Configuration = builder.Build();
-            
-            _serviceProvider = serviceProvider;
         }
 
         public IConfiguration Configuration { get; }
@@ -76,10 +72,8 @@ namespace ProductIdentification.Web
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
-            
-            var secretsFetcher = _serviceProvider.GetService<ISecretsFetcher>();
-            
-            services.AddScoped<IFileRepository>(s => new AzureFileRepository(secretsFetcher.GetStorageConnectionString));
+
+            services.AddScoped<IFileRepository, AzureFileRepository>();
 
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<ISubCategoryService, SubCategoryService>();
