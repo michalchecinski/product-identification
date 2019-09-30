@@ -6,7 +6,7 @@ using ProductIdentification.Infrastructure;
 
 namespace ProductIdentification.Web.Controllers
 {
-    [Authorize(Roles = Role.DataManager)]
+    [Authorize(Roles = CustomRoles.DataManagerOrAbove)]
     public class ReviewPhotosController : Controller
     {
         private readonly IReviewProductPhotosService _reviewProductPhotosService;
