@@ -108,18 +108,7 @@ namespace ProductIdentification.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.CategoryNames = await _categoryService.GetAllCategoriesNames();
-
-                var category = model.CategoryName;
-                if (!string.IsNullOrWhiteSpace(category))
-                {
-                    var subCats = await _subCategoryService.GetSubcategoriesByCategoryName(category);
-                    model.SubCategoryNames = subCats ?? new List<string>();
-                }
-                else
-                {
-                    model.SubCategoryNames = new List<string>();
-                }
+                await FillSubcategoryList(model);
 
                 return View(model);
             }
@@ -136,9 +125,11 @@ namespace ProductIdentification.Web.Controllers
 
                 return RedirectToAction(nameof(Details), new {id = result.Id});
             }
-            catch
+            catch(Exception ex)
             {
-                return View();
+                ViewData["Error"] = ex.Message;
+                await FillSubcategoryList(model);
+                return View(model);
             }
         }
 
@@ -156,15 +147,17 @@ namespace ProductIdentification.Web.Controllers
         // POST: Product/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, ProductCreateModel model)
+        public async Task<ActionResult> Edit(int id, ProductCreateModel model)
         {
             if (model.Id != id)
             {
+                await FillSubcategoryList(model);
                 return View(model);
             }
 
             if (ModelState.IsValid)
             {
+                await FillSubcategoryList(model);
                 return View(model);
             }
 
@@ -175,9 +168,27 @@ namespace ProductIdentification.Web.Controllers
 
                 return RedirectToAction(nameof(Details), new {id = result.Id});
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                ViewData["Error"] = ex.Message;
+                await FillSubcategoryList(model);
+                return View(model);
+            }
+        }
+
+        private async Task FillSubcategoryList(ProductCreateModel model)
+        {
+            model.CategoryNames = await _categoryService.GetAllCategoriesNames();
+
+            var category = model.CategoryName;
+            if (!string.IsNullOrWhiteSpace(category))
+            {
+                var subCats = await _subCategoryService.GetSubcategoriesByCategoryName(category);
+                model.SubCategoryNames = subCats ?? new List<string>();
+            }
+            else
+            {
+                model.SubCategoryNames = new List<string>();
             }
         }
     }

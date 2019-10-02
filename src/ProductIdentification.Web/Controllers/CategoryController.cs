@@ -6,7 +6,9 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Documents.SystemFunctions;
 using ProductIdentification.Core.DomainModels;
+using ProductIdentification.Core.Repositories;
 using ProductIdentification.Infrastructure;
 using ProductIdentification.Web.Models;
 
@@ -17,10 +19,13 @@ namespace ProductIdentification.Web.Controllers
     {
         private readonly ICategoryService _categoryService;
         private readonly IMapper _mapper;
+        private readonly ICategoryRepository _categoryRepository;
 
-        public CategoryController(ICategoryService categoryService, IMapper mapper)
+        public CategoryController(ICategoryService categoryService, ICategoryRepository categoryRepository,
+                                  IMapper mapper)
         {
             _categoryService = categoryService;
+            _categoryRepository = categoryRepository;
             _mapper = mapper;
         }
 
@@ -42,21 +47,31 @@ namespace ProductIdentification.Web.Controllers
         // POST: CategoriesNamesList/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(CategoryViewModel model)
+        public async Task<ActionResult> Create(CategoryViewModel model)
         {
-            //TODO Validate model here
+            if (ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            if (await _categoryRepository.GetCategoryByNameAsync(model.Name) != null)
+            {
+                ModelState.AddModelError(nameof(CategoryViewModel.Name), "Category with that name already exists");
+                return View(model);
+            }
 
             try
             {
                 var category = _mapper.Map<Category>(model);
 
-                _categoryService.AddCategory(category);
+                await _categoryService.AddCategory(category);
 
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                ViewData["Error"] = ex.Message;
+                return View(model);
             }
         }
 
@@ -71,20 +86,32 @@ namespace ProductIdentification.Web.Controllers
         // POST: CategoriesNamesList/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, CategoryViewModel model)
+        public async Task<ActionResult> Edit(int id, CategoryViewModel model)
         {
-            //TODO Validate model here
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var categoryFromDb = await _categoryRepository.GetCategoryByNameAsync(model.Name);
+            if (categoryFromDb != null && (categoryFromDb.Id != model.Id || categoryFromDb.Id != id))
+            {
+                ModelState.AddModelError(nameof(CategoryViewModel.Name), "Category with that name already exists");
+                return View(model);
+            }
+
             try
             {
                 var category = _mapper.Map<Category>(model);
 
-                _categoryService.UpdateCategory(category);
+                await _categoryService.UpdateCategory(category);
 
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                ViewData["Error"] = ex.Message;
+                return View(model);
             }
         }
     }
