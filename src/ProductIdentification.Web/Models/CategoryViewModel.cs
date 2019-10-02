@@ -13,7 +13,7 @@ namespace ProductIdentification.Web.Models
     {
         [HiddenInput(DisplayValue = false)]
         public int Id { get; set; }
-        [DisplayName("CategoryName Name")]
+        [DisplayName("Category Name")]
         [Required(ErrorMessage = "Required")]
         public string Name { get; set; }
     }

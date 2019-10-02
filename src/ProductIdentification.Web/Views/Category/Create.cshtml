@@ -1,10 +1,15 @@
 ﻿@model ProductIdentification.Web.Models.CategoryViewModel
 
 @{
-    ViewData["Title"] = "Create new CategoryName";
+    ViewData["Title"] = "Create new Category";
 }
 
-    <h1>Create new CategoryName</h1>
+<h1>Create new Category</h1>
+
+@if (ViewData["Error"] != null)
+{
+    <p>@ViewData["Error"]</p>
+}
 
 <hr />
 <div class="row">
