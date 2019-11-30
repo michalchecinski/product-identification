@@ -23,7 +23,7 @@ namespace ProductIdentification.Infrastructure
         private readonly string _trainingKey;
         private readonly string _predictionId;
         private readonly string _endpointUrl;
-        private const string PublishedModelName = "ProductIdentification";
+        private const string PublishedModelName = "x";
 
         public ProductIdentifyService(IProductRepository productRepository, ISecretsFetcher secretsFetcher)
         {
@@ -68,7 +68,7 @@ namespace ProductIdentification.Infrastructure
             };
 
             Tag tag;
-            
+
             try
             {
                 tag = await trainingApi.CreateTagAsync(_projectId, product.TagName);
@@ -132,7 +132,7 @@ namespace ProductIdentification.Infrastructure
             };
 
             Tag tag;
-            
+
             try
             {
                 tag = await trainingApi.GetTagAsync(_projectId, product.CustomVisionTagId);

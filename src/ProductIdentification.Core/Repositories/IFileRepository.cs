@@ -13,5 +13,6 @@ namespace ProductIdentification.Core.Repositories
         Task CopyFile(string sourceFolderName, string targetFolderName, string fileName);
         Task<IEnumerable<string>> FileNamesList(string folderName);
         Task<IEnumerable<PhotoFile>> FilesList(string folderName);
+        Task MoveFile(string sourceFolderName, string targetFolderName, string fileName);
     }
 }

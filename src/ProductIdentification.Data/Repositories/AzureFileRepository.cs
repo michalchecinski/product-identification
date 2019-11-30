@@ -153,6 +153,17 @@ namespace ProductIdentification.Data.Repositories
             return blobsList;
         }
 
+        public async Task MoveFile(string sourceFolderName, string targetFolderName, string fileName)
+        {
+            await CopyFile(sourceFolderName, targetFolderName, fileName);
+            
+            var (containerName, blobName) = GetContainerAndBlobName(sourceFolderName, fileName);
+            var cloudBlobContainer = await CreateContainer(containerName);
+            var blob = cloudBlobContainer.GetBlockBlobReference(blobName);
+            
+            await blob.DeleteIfExistsAsync();
+        }
+
         private static CloudBlobDirectory GetDeepestFolder(CloudBlobContainer cloudBlobContainer, string[] splitted)
         {
             var folder = cloudBlobContainer.GetDirectoryReference(splitted[1]);

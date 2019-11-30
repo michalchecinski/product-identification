@@ -36,7 +36,7 @@ namespace ProductIdentification.Infrastructure
         {
             var product = await _productRepository.Get(productId);
 
-            await _fileRepository.CopyFile(product.StoragePathToVerify(), product.StoragePathVerified(), photoName);
+            await _fileRepository.MoveFile(product.StoragePathToVerify(), product.StoragePathVerified(), photoName);
 
             await _queueService.SendMessageAsync(QueueNames.UpdateProduct, new UpdateProductMessage(product.Id));
         }
