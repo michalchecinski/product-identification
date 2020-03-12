@@ -214,7 +214,6 @@
         ],
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('webHostingPlanName'))]",
         "reserved": false,
-        "siteConfig": null,
         "scmSiteAlsoStopped": false,
         "hostingEnvironmentProfile": null,
         "clientAffinityEnabled": true,
@@ -224,20 +223,25 @@
         "dailyMemoryTimeQuota": 0,
         "cloningInfo": null,
         "httpsOnly": false,
-        "DBConnection": {
-          "value": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('sqlserverName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('databaseName'), ';User Id=', parameters('sqlAdministratorLogin'), '@', reference(concat('Microsoft.Sql/servers/', parameters('sqlserverName'))).fullyQualifiedDomainName, ';Password=', parameters('sqlAdministratorLoginPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;ConnectRetryCount=10;')]",
-          "type": "SQLAzure"
-        },
-        "appSettings": [
-          {
-            "name": "IsLocalhost",
-            "value": false
-          },
-          {
-            "name": "KeyVaultUri",
-            "value": "[variables('keyVaultUrl')]"
-          }
-        ]
+        "siteConfig": {
+          "connectionStrings": [
+            {
+              "name": "DBConnection",
+              "connectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('sqlserverName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('databaseName'), ';User Id=', parameters('sqlAdministratorLogin'), '@', reference(concat('Microsoft.Sql/servers/', parameters('sqlserverName'))).fullyQualifiedDomainName, ';Password=', parameters('sqlAdministratorLoginPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;ConnectRetryCount=10;')]",
+              "type": "SQLAzure"
+            }
+          ],
+          "appSettings": [
+            {
+              "name": "IsLocalhost",
+              "value": false
+            },
+            {
+              "name": "KeyVaultUri",
+              "value": "[variables('keyVaultUrl')]"
+            }
+          ]
+        }
       },
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', parameters('webHostingPlanName'))]",
