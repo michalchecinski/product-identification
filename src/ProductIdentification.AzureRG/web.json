@@ -233,11 +233,11 @@
           ],
           "appSettings": [
             {
-              "name": "IsLocalhost",
+              "name": "AppSettings:IsLocalhost",
               "value": false
             },
             {
-              "name": "KeyVaultUri",
+              "name": "AppSettings:KeyVaultUri",
               "value": "[variables('keyVaultUrl')]"
             }
           ]
@@ -383,6 +383,10 @@
             {
               "name": "KeyVaultUri",
               "value": "[variables('keyVaultUrl')]"
+            },
+            {
+              "name": "StorageProdIden",
+              "value": "[Concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2018-07-01').keys[0].value)]"
             }
           ]
         }
