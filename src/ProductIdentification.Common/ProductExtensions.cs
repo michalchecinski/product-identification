@@ -4,9 +4,11 @@ namespace ProductIdentification.Common
 {
     public static class ProductExtensions
     {
-        public static string StoragePath(this Product product)
+        private static string StoragePath(this Product product)
         {
-            return $"{product.Category.Name}/{product.SubCategory.Name}/{product.Name}".Replace(" ", "-");
+            return $"{product.Category.Name}/{product.SubCategory.Name}/{product.Name}"
+                .Replace(" ", "-")
+                .ToLowerInvariant();
         }
 
         public static string StoragePathOriginal(this Product product) => $"{product.StoragePath()}/original";
