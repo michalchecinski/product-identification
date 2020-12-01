@@ -6,7 +6,9 @@ Frontend build [![Frontend Build Status](https://dev.azure.com/michalchecinski/p
 
 ## System use case
 
-Product identification system is meant to recognize products based on the images  and add appropriate product to virtual shopping cart and receipt.
+Product identification system is meant to recognize products based on the images and add appropriate product to virtual shopping cart and receipt.
+
+This system is meant to replace self-service checkout, that scans barcodes of products. Instead, people can make photos of the products that they are putting in the cart in the store, and don't need to worry about looking for barcode on product, making photo in a right angle etc. Customer need to just snap a photo of the product, and then machine learning model will recognize the product itself, and add it to the customers receipt.
 
 ### Video demo
 
