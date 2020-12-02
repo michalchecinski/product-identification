@@ -24,9 +24,9 @@ This solution has ARM templates to automate Azure deployments. The templates are
 
 There are three main [build pipelines](https://dev.azure.com/michalchecinski/product indetification/_build):
 
-- [master_full](https://dev.azure.com/michalchecinski/product indetification/_build?definitionId=8) - to build the management portal
-- [master_infrastructure](https://dev.azure.com/michalchecinski/product indetification/_build?definitionId=12) - to copy infrastructure ARM templates to artifact
-- [master-frontend](https://dev.azure.com/michalchecinski/product indetification/_build?definitionId=11) - to build frontend app build on React.js
+- [master_full](https://dev.azure.com/michalchecinski/product%20indetification/_build?definitionId=8) - to build the management portal
+- [master_infrastructure](https://dev.azure.com/michalchecinski/product%20indetification/_build?definitionId=12) - to copy infrastructure ARM templates to artifact
+- [master-frontend](https://dev.azure.com/michalchecinski/product%20indetification/_build?definitionId=11) - to build frontend app build on React.js
 
 ### Links
 
